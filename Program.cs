@@ -1,3 +1,5 @@
+using Microsoft.Data.SqlClient;
+
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
@@ -15,6 +17,32 @@ if (app.Environment.IsDevelopment())
 }
 
 app.UseHttpsRedirection();
+
+app.MapGet("/api/health/database", async (IConfiguration configuration) =>
+{
+    var connectionString = configuration.GetConnectionString("TrackingDatabase");
+    if (string.IsNullOrWhiteSpace(connectionString))
+    {
+        return Results.Problem(
+            title: "Database configuration is missing",
+            detail: "Connection string 'TrackingDatabase' was not found.",
+            statusCode: StatusCodes.Status500InternalServerError);
+    }
+
+    await using var connection = new SqlConnection(connectionString);
+    await connection.OpenAsync();
+
+    await using var command = new SqlCommand("SELECT DB_NAME()", connection);
+    var databaseName = (string?)await command.ExecuteScalarAsync();
+
+    return Results.Ok(new
+    {
+        status = "connected",
+        database = databaseName
+    });
+})
+.WithName("CheckDatabase")
+.WithOpenApi();
 
 var summaries = new[]
 {
