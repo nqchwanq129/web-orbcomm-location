@@ -1,0 +1,6 @@
+@WebsitesOrbcommLocations_HostAddress = http://localhost:5234
+
+GET {{WebsitesOrbcommLocations_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###
