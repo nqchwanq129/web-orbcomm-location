@@ -79,6 +79,7 @@ export function renderDevices(devices) {
     if (!marker) {
       const popup = new window.maplibregl.Popup({
         offset: 25,
+        maxWidth: "320px",
       }).setHTML(popupContent(device));
 
       marker = new window.maplibregl.Marker()
