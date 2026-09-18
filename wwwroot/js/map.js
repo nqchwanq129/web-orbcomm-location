@@ -6,13 +6,10 @@ export function initializeMap() {
   if (map) {
     return map;
   }
-
   const maplibre = window.maplibregl;
-
   if (!maplibre) {
     throw new Error("Không tải được thư viện MapLibre từ CDN");
   }
-
   map = new maplibre.Map({
     container: "map",
     style: {
@@ -25,7 +22,6 @@ export function initializeMap() {
           attribution: "© OpenStreetMap contributors",
         },
       },
-
       layers: [
         {
           id: "osm",
@@ -40,21 +36,16 @@ export function initializeMap() {
   });
 
   map.addControl(new maplibre.NavigationControl(), "top-right");
-
   return map;
 }
 
 const markers = new Map();
-
 let hasFittedToDevices = false;
-
 export function renderDevices(devices) {
   if (!map) {
     initializeMap();
   }
-
   const currentIds = new Set(devices.map((device) => device.mobileId));
-
   // Xóa marker không còn tồn tại
   for (const [mobileId, marker] of markers) {
     if (!currentIds.has(mobileId)) {
@@ -67,21 +58,16 @@ export function renderDevices(devices) {
   // Tạo hoặc cập nhật marker
   for (const device of devices) {
     const longitude = Number(device.longitude);
-
     const latitude = Number(device.latitude);
-
     if (!Number.isFinite(longitude) || !Number.isFinite(latitude)) {
       continue;
     }
-
     let marker = markers.get(device.mobileId);
-
     if (!marker) {
       const popup = new window.maplibregl.Popup({
         offset: 25,
         maxWidth: "320px",
       }).setHTML(popupContent(device));
-
       marker = new window.maplibregl.Marker()
         .setLngLat([longitude, latitude])
         .setPopup(popup)
@@ -98,17 +84,13 @@ export function renderDevices(devices) {
   // Zoom lần đầu vào toàn bộ thiết bị
   if (!hasFittedToDevices && devices.length > 0) {
     const bounds = new window.maplibregl.LngLatBounds();
-
     for (const device of devices) {
       const longitude = Number(device.longitude);
-
       const latitude = Number(device.latitude);
-
       if (Number.isFinite(longitude) && Number.isFinite(latitude)) {
         bounds.extend([longitude, latitude]);
       }
     }
-
     if (!bounds.isEmpty()) {
       map.fitBounds(bounds, {
         padding: 60,
@@ -122,11 +104,9 @@ export function renderDevices(devices) {
 
 export function focusDevice(mobileId) {
   const marker = markers.get(mobileId);
-
   if (!marker) {
     return;
   }
-
   map.flyTo({
     center: marker.getLngLat(),
     zoom: 15,
