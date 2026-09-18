@@ -11,7 +11,7 @@
       rel="stylesheet"
     />
 
-    <link rel="stylesheet" href="/css/site.css?v=2" />
+    <link rel="stylesheet" href="/css/site.css?v=3" />
     <link rel="stylesheet" href="/css/topbar.css?v=5" />
     <link rel="stylesheet" href="/css/popup.css?v=2" />
   </head>
@@ -22,28 +22,11 @@
       <header id="topbar"></header>
 
       <!-- BOTTOM -->
-      <div class="app-content">
-        <!-- LEFT -->
-        <aside class="sidebar">
-          <section class="device-summary">
-            <strong id="device-count">0</strong>
-            <span>thiết bị có vị trí</span>
-          </section>
-
-          <section>
-            <h2>Thiết bị</h2>
-
-            <ul id="device-list" class="device-list"></ul>
-          </section>
-        </aside>
-
-        <!-- RIGHT -->
-        <section id="map" aria-label="Bản đồ vị trí thiết bị"></section>
-      </div>
+      <main id="page-content" class="app-content"></main>
     </div>
 
     <script src="https://unpkg.com/maplibre-gl@5.7.1/dist/maplibre-gl.js"></script>
 
-    <script type="module" src="/js/app.js?v=3"></script>
+    <script type="module" src="/js/app.js?v=4"></script>
   </body>
 </html>
