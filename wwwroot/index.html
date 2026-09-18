@@ -1,0 +1,35 @@
+<!doctype html>
+<html lang="vi">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>ORBCOMM SC1000 Tracking</title>
+    <link
+      href="https://unpkg.com/maplibre-gl@5.7.1/dist/maplibre-gl.css"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="/css/site.css" />
+  </head>
+  <body>
+    <main class="app-shell">
+      <aside class="sidebar">
+        <header>
+          <p class="eyebrow">ORBCOMM</p>
+          <h1>SC1000 Tracking</h1>
+          <p id="connection-status" class="status">Đang tải dữ liệu…</p>
+        </header>
+        <section class="device-summary">
+          <strong id="device-count">0</strong>
+          <span>thiết bị có vị trí</span>
+        </section>
+        <section>
+          <h2>Thiết bị</h2>
+          <ul id="device-list" class="device-list"></ul>
+        </section>
+      </aside>
+      <section id="map" aria-label="Bản đồ vị trí thiết bị"></section>
+    </main>
+    <script src="https://unpkg.com/maplibre-gl@5.7.1/dist/maplibre-gl.js"></script>
+    <script src="/js/map.js"></script>
+  </body>
+</html>

@@ -1,0 +1,84 @@
+/* wwwroot/css/site.css */
+:root {
+    font-family: Inter, "Segoe UI", sans-serif;
+    color: #172033;
+    background: #eef2f7;
+}
+
+* { box-sizing: border-box; }
+
+body { margin: 0; }
+
+.app-shell {
+    display: grid;
+    grid-template-columns: 320px 1fr;
+    height: 100vh;
+}
+
+.sidebar {
+    z-index: 1;
+    overflow-y: auto;
+    padding: 28px 20px;
+    background: #fff;
+    box-shadow: 2px 0 12px rgb(20 37 63 / 10%);
+}
+
+.eyebrow {
+    margin: 0 0 5px;
+    color: #2563eb;
+    font-size: .75rem;
+    font-weight: 800;
+    letter-spacing: .13em;
+}
+
+h1 { margin: 0; font-size: 1.35rem; }
+h2 { margin: 28px 0 10px; font-size: .9rem; }
+
+.status { color: #667085; font-size: .86rem; }
+.status.error { color: #b42318; }
+
+.device-summary {
+    display: flex;
+    align-items: baseline;
+    gap: 8px;
+    padding: 14px;
+    border-radius: 10px;
+    background: #eff6ff;
+}
+
+.device-summary strong { color: #1d4ed8; font-size: 1.6rem; }
+.device-summary span { color: #475467; font-size: .85rem; }
+
+.device-list { margin: 0; padding: 0; list-style: none; }
+.device-list button {
+    width: 100%;
+    margin-bottom: 8px;
+    padding: 12px;
+    border: 1px solid #e4e7ec;
+    border-radius: 8px;
+    background: #fff;
+    color: inherit;
+    text-align: left;
+    cursor: pointer;
+}
+
+.device-list button:hover { border-color: #60a5fa; background: #f8fbff; }
+.device-list small { display: block; margin-top: 4px; color: #667085; }
+
+#map {
+    width: 100%;
+    height: 100%;
+    min-width: 0;
+    min-height: 0;
+}
+
+.popup-title { margin: 0 0 8px; font-size: 1rem; }
+.popup-grid { display: grid; grid-template-columns: auto auto; gap: 5px 14px; font-size: .83rem; }
+.popup-grid dt { color: #667085; }
+.popup-grid dd { margin: 0; font-weight: 600; }
+
+@media (max-width: 700px) {
+    .app-shell { grid-template-columns: 1fr; grid-template-rows: auto minmax(0, 1fr); }
+    .sidebar { max-height: 40vh; padding: 16px; }
+    h2 { margin-top: 18px; }
+}

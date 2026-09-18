@@ -21,6 +21,8 @@ if (app.Environment.IsDevelopment())
 }
 
 app.UseHttpsRedirection();
+app.UseDefaultFiles();
+app.UseStaticFiles();
 app.MapControllers();
 
 app.MapGet("/api/health/database", async (IConfiguration configuration) =>
@@ -36,10 +38,8 @@ app.MapGet("/api/health/database", async (IConfiguration configuration) =>
 
     await using var connection = new SqlConnection(connectionString);
     await connection.OpenAsync();
-
     await using var command = new SqlCommand("SELECT DB_NAME()", connection);
     var databaseName = (string?)await command.ExecuteScalarAsync();
-
     return Results.Ok(new
     {
         status = "connected",
