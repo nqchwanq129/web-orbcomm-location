@@ -1,7 +1,9 @@
+import { renderTopbar } from "./topbar.js";
 import { getDevices } from "./api.js";
 import { initializeMap, renderDevices, focusDevice } from "./map.js";
 import { formatDate } from "./popup.js";
 
+renderTopbar();
 const statusElement = document.getElementById("connection-status");
 const countElement = document.getElementById("device-count");
 const deviceListElement = document.getElementById("device-list");
