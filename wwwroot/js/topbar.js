@@ -7,23 +7,20 @@ export function renderTopbar() {
 
   topbar.innerHTML = `
     <div class="topbar__brand">
-
-      <div class="topbar__logo">
-        O
-      </div>
-
+<div class="topbar__logo">
+  <img
+    src="/assets/logos/vishipel-logo.png"
+    alt="ORBCOMM Logo"
+  />
+</div>
       <div class="topbar__brand-text">
-
         <div class="topbar__title">
           ORBCOMM Tracking
         </div>
-
         <div class="topbar__subtitle">
           SC1000 Fleet Monitoring
         </div>
-
       </div>
-
     </div>
 
 
