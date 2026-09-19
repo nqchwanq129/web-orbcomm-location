@@ -1,8 +1,8 @@
 import { renderTopbar } from "./topbar.js";
 import { renderTrackingPage } from "./pages/tracking.js";
 import { renderDevicesPage } from "./pages/devices.js";
-import { renderHistoryPage } from "./pages/history.js";
-import { getDevices } from "./api.js";
+import { renderHistoryPage, initializeHistoryPage } from "./pages/history.js?v=3";
+import { getDevices } from "./api.js?v=2";
 import {
   initializeMap,
   destroyMap,
@@ -35,6 +35,7 @@ function showPage(page) {
 
     case "history":
       renderHistoryPage();
+      initializeHistoryPage();
 
       break;
 
