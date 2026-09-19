@@ -14,4 +14,6 @@ public interface IDeviceRepository
         DateTime? to,
         string? messageType
     );
+
+    Task<DeviceHistoryDetail?> GetDeviceHistoryDetailAsync(long logId);
 }

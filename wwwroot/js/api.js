@@ -35,3 +35,13 @@ export async function getDeviceHistory({ mobileId, from, to, messageType }) {
 
   return response.json();
 }
+
+export async function getDeviceHistoryDetail(logId) {
+  const response = await fetch(`/api/devices/history/${logId}`);
+
+  if (!response.ok) {
+    throw new Error(`API trả về ${response.status}`);
+  }
+
+  return response.json();
+}

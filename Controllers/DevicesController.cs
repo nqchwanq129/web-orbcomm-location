@@ -53,4 +53,18 @@ public sealed class DevicesController : ControllerBase
 
         return Ok(history);
     }
+
+    [HttpGet("history/{logId:long}")]
+[ProducesResponseType<DeviceHistoryDetail>(StatusCodes.Status200OK)]
+[ProducesResponseType(StatusCodes.Status404NotFound)]
+public async Task<ActionResult<DeviceHistoryDetail>> GetHistoryDetail(long logId)
+{
+    var detail = await _deviceRepository.GetDeviceHistoryDetailAsync(logId);
+
+    if (detail is null) {
+        return NotFound();
+    }
+
+    return Ok(detail);
+}
 }

@@ -67,6 +67,7 @@ public sealed class DeviceRepository : IDeviceRepository
     {
         const string sql = """
             SELECT
+                LogID AS LogId,
                 MobileID AS MobileId,
                 MessageUTC AS MessageUtc,
                 MessageTypeName,
@@ -130,4 +131,58 @@ public sealed class DeviceRepository : IDeviceRepository
 
         return history.AsList();
     }
+
+    public async Task<DeviceHistoryDetail?> GetDeviceHistoryDetailAsync(long logId)
+{
+    const string sql = """
+        SELECT
+            LogID AS LogId,
+            OgwsMessageID AS OgwsMessageId,
+            MobileID AS MobileId,
+            MessageUTC AS MessageUtc,
+            ReceiveUTC AS ReceiveUtc,
+            SIN AS Sin,
+            MIN AS Min,
+            MessageTypeName,
+            ReportTimestampUTC AS ReportTimestampUtc,
+            ReportSourceCode,
+            ReportSourceName,
+            BatteryVoltage,
+            InternalTemperatureC,
+            Latitude,
+            Longitude,
+            MotionState,
+            StaleFix,
+            SpeedKmh,
+            HeadingDeg,
+            ServiceStatus,
+            ServiceHours,
+            SensorTriggerID AS SensorTriggerId,
+            SensorsJson,
+            RawGnssJammingValue,
+            DroppedMessageCount,
+            BlockageDurationSec,
+            XAccelerationMg,
+            YAccelerationMg,
+            ZAccelerationMg,
+            ReplySensorIndex,
+            ReplySensorName,
+            ReplySensorStatus,
+            ReplySensorConnected,
+            ResetSuccessful,
+            ConfigSummaryJson,
+            RawPayloadHex,
+            PayloadJson,
+            CreatedAt
+        FROM dbo.MessageLog
+        WHERE LogID = @LogId;
+        """;
+
+    await using var connection = new SqlConnection(_connectionString);
+
+    return await connection.QuerySingleOrDefaultAsync<DeviceHistoryDetail>(
+        sql,
+        new { LogId = logId }
+    );
+}
 }
