@@ -1,7 +1,16 @@
-//WebsitesOrbcommLocations.http
 @WebsitesOrbcommLocations_HostAddress = http://localhost:5234
 
 GET {{WebsitesOrbcommLocations_HostAddress}}/api/devices
+Accept: application/json
+
+###
+
+GET {{WebsitesOrbcommLocations_HostAddress}}/api/devices/history
+Accept: application/json
+
+###
+
+GET {{WebsitesOrbcommLocations_HostAddress}}/api/devices/history?mobileId=KAAB1251900460
 Accept: application/json
 
 ###
