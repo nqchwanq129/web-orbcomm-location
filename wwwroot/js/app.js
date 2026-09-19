@@ -1,7 +1,10 @@
 import { renderTopbar } from "./topbar.js";
 import { renderTrackingPage } from "./pages/tracking.js";
-import { renderDevicesPage } from "./pages/devices.js";
-import { renderHistoryPage, initializeHistoryPage } from "./pages/history.js?v=8";
+import { renderDevicesPage, initializeDevicesPage } from "./pages/devices.js";
+import {
+  renderHistoryPage,
+  initializeHistoryPage,
+} from "./pages/history.js?v=8";
 import { getDevices } from "./api.js?v=2";
 import {
   initializeMap,
@@ -30,7 +33,7 @@ function showPage(page) {
   switch (page) {
     case "devices":
       renderDevicesPage();
-
+      initializeDevicesPage();
       break;
 
     case "history":
