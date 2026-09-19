@@ -7,12 +7,12 @@ export function renderTopbar() {
 
   topbar.innerHTML = `
     <div class="topbar__brand">
-<div class="topbar__logo">
-  <img
-    src="/assets/logos/vishipel-logo.png"
-    alt="ORBCOMM Logo"
-  />
-</div>
+      <div class="topbar__logo">
+        <img
+          src="/assets/logos/vishipel-logo.png"
+          alt="ORBCOMM Logo"
+        />
+      </div>
       <div class="topbar__brand-text">
         <div class="topbar__title">
           ORBCOMM Tracking
@@ -25,59 +25,35 @@ export function renderTopbar() {
 
 
     <nav class="topbar__nav">
-
       <button
         class="topbar__nav-item topbar__nav-item--active"
         type="button"
         data-page="tracking">
-
         Theo dõi trực tiếp
-
       </button>
-
 
       <button
         class="topbar__nav-item"
         type="button"
         data-page="devices">
-
         Danh sách
-
       </button>
-
 
       <button
         class="topbar__nav-item"
         type="button"
         data-page="history">
-
         Lịch sử
-
       </button>
-
-
-      <button
-        class="topbar__nav-item"
-        type="button"
-        data-page="alerts">
-
-        Cảnh báo
-
-      </button>
-
     </nav>
 
 
     <div class="topbar__actions">
-
       <div class="topbar__connection">
-
         <span class="topbar__connection-dot"></span>
-
         <span id="connection-status">
           Đang tải dữ liệu…
         </span>
-
       </div>
 
 

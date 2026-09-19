@@ -7,38 +7,28 @@ const markers = new Map();
 let hasFittedToDevices = false;
 
 /* INITIALIZE MAP */
-
 export function initializeMap() {
   if (map) {
     return map;
   }
-
   const mapContainer = document.getElementById("map");
-
   if (!mapContainer) {
     return null;
   }
 
   const maplibre = window.maplibregl;
-
   if (!maplibre) {
     throw new Error("Không tải được thư viện MapLibre từ CDN");
   }
-
   map = new maplibre.Map({
     container: "map",
-
     style: {
       version: 8,
-
       sources: {
         osm: {
           type: "raster",
-
           tiles: ["https://tile.openstreetmap.org/{z}/{x}/{y}.png"],
-
           tileSize: 256,
-
           attribution: "© OpenStreetMap contributors",
         },
       },
@@ -51,32 +41,23 @@ export function initializeMap() {
         },
       ],
     },
-
     center: [108.2, 16.1],
-
     zoom: 5,
   });
-
   map.addControl(new maplibre.NavigationControl(), "top-right");
-
   return map;
 }
 
-/* DESTROY MAP */
-
+// Destroy map
 export function destroyMap() {
   for (const marker of markers.values()) {
     marker.remove();
   }
-
   markers.clear();
-
   if (map) {
     map.remove();
-
     map = null;
   }
-
   hasFittedToDevices = false;
 }
 

@@ -11,12 +11,10 @@ namespace WebsitesOrbcommLocations.Controllers;
 public sealed class DevicesController : ControllerBase
 {
     private readonly IDeviceRepository _deviceRepository;
-
     public DevicesController(IDeviceRepository deviceRepository)
     {
         _deviceRepository = deviceRepository;
     }
-
     [HttpGet]
     [ProducesResponseType<IReadOnlyList<DevicePosition>>(StatusCodes.Status200OK)]
     public async Task<ActionResult<IReadOnlyList<DevicePosition>>> GetDevices()
