@@ -1,0 +1,106 @@
+<!doctype html>
+<meta charset="utf-8">
+<!-- Run from the repository root: python -m http.server 8765
+     Open http://localhost:8765/tests/tracking-smoke.html -->
+<link rel="stylesheet" href="/wwwroot/css/pages/tracking.css">
+<link rel="stylesheet" href="/wwwroot/css/site.css">
+<div id="topbar"></div><main id="page-content" style="height:800px"></main>
+<pre id="results">RUNNING</pre>
+<script type="module">
+const results = [];
+const assert = (condition, message) => {
+  if (!condition) throw new Error(message);
+  results.push(`PASS ${message}`);
+};
+const tick = () => new Promise(resolve => setTimeout(resolve, 0));
+const text = id => document.getElementById(id)?.textContent;
+const timers = [];
+window.setInterval = callback => { timers.push(callback); return timers.length; };
+window.clearInterval = () => {};
+let response = [{ mobileId: 'DB-1', logId: 123, latitude: 21, longitude: 105,
+  speedKmh: 0, headingDeg: 0, motionState: false, staleFix: false,
+  batteryVoltage: 3.3, internalTemperatureC: 36, reportSourceName: 'GPS',
+  messageTypeName: 'positionReport', messageUtc: '2026-09-19T03:28:47',
+  reportTimestampUtc: null, updatedAt: '2026-09-19T03:28:47Z' }];
+let fail = false;
+let pending = null;
+let requests = 0;
+window.fetch = async (url, options) => {
+  if (url !== '/api/devices') throw new Error(`Unexpected request ${url}`);
+  requests++;
+  if (pending) return new Promise(resolve => { pending.resolve = resolve; pending.signal = options.signal; });
+  return { ok: !fail, status: fail ? 500 : 200, json: async () => response };
+};
+const markers = [];
+let resizeCount = 0;
+let fitCount = 0;
+let focusCount = 0;
+window.maplibregl = {
+  Map: class { addControl() {} remove() {} resize() { resizeCount++; }
+    fitBounds() { fitCount++; } flyTo() { focusCount++; } },
+  NavigationControl: class {},
+  LngLatBounds: class { extend() {} },
+  Marker: class {
+    constructor() { this.element = document.createElement('button'); markers.push(this); }
+    setLngLat(position) { this.position = position; return this; }
+    addTo() { document.getElementById('map').append(this.element); return this; }
+    getElement() { return this.element; }
+    getLngLat() { return this.position; }
+    remove() { this.element.remove(); }
+  },
+};
+try {
+  await import('/wwwroot/js/app.js?v=16');
+  await tick();
+  assert(document.querySelectorAll('.tracking-device-card').length === 1, 'Only styled DB device cards render');
+  document.querySelector('.tracking-device-card').click();
+  assert(text('tracking-detail-mobile-id') === 'DB-1', 'Card opens detail');
+  assert(text('tracking-detail-speed') === '0' && text('tracking-detail-heading') === '0°', 'Zero values preserved');
+  assert(text('tracking-detail-battery') === '3.30' && text('tracking-temperature') === '36 °C', 'DB battery and temperature');
+  assert(text('tracking-report-source') === 'GPS' && text('tracking-report-time') === '—', 'Report source and nullable timestamp');
+  assert(text('tracking-message-time') === text('tracking-message-updated'), 'SQL UTC timestamp without suffix matches explicit UTC');
+  const mapBox = document.querySelector('.tracking-map-area').getBoundingClientRect();
+  const panelBox = document.querySelector('.tracking-device-panel').getBoundingClientRect();
+  assert(Math.abs(panelBox.top - mapBox.top) < 1, 'Detail stays on the map row');
+  document.getElementById('tracking-detail-close').click();
+  markers[0].element.click();
+  assert(document.querySelector('.tracking-page--detail-open') && focusCount >= 2, 'Marker opens detail and focuses without popup API');
+  document.getElementById('fit-all-devices').click();
+  window.dispatchEvent(new CustomEvent('tracking:map-resize'));
+  assert(fitCount >= 2 && resizeCount > 0, 'Fit all and resize are connected');
+  const original = response[0];
+  response = [{ ...original, speedKmh: null, headingDeg: null, motionState: null,
+    batteryVoltage: null, internalTemperatureC: null, staleFix: true }];
+  timers[0](); await tick();
+  assert(text('tracking-detail-speed') === '—' && text('tracking-detail-battery') === '—', 'Nullable telemetry refreshes selected detail');
+  assert(text('tracking-detail-state-text') === 'Không xác định' && text('tracking-stale-count') === '1', 'Unknown motion and stale GPS are independent');
+  document.querySelector('[data-filter="stale"]').click();
+  assert(document.querySelectorAll('.tracking-device-card').length === 1, 'Stale GPS filter');
+  fail = true; timers[0](); await tick();
+  assert(text('connection-status').includes('500') && text('tracking-detail-mobile-id') === 'DB-1', 'API failure retains last data and reports failure');
+  fail = false;
+  const checkbox = document.getElementById('auto-refresh');
+  checkbox.checked = false; checkbox.dispatchEvent(new Event('change'));
+  const before = requests; timers[0](); await tick();
+  assert(requests === before, 'Auto refresh can pause');
+  response = []; checkbox.checked = true; checkbox.dispatchEvent(new Event('change')); await tick();
+  assert(!document.querySelector('.tracking-page--detail-open') && text('device-count') === '0', 'Missing device closes detail and clears markers');
+  response = [{ ...original, mobileId: '<img src=x onerror=alert(1)>', latitude: null }];
+  timers[0](); await tick();
+  document.querySelector('[data-filter="all"]').click();
+  assert(!document.querySelector('#device-list img'), 'API strings are escaped');
+  document.querySelector('.tracking-device-card').click();
+  assert(document.getElementById('tracking-copy-coordinate').disabled, 'Invalid coordinates cannot be copied or focused');
+  pending = {}; timers[0](); await tick();
+  const oldRequest = { ...pending };
+  document.querySelector('[data-page="tracking"]').click();
+  assert(oldRequest.signal.aborted && !pending.signal.aborted, 'Navigation aborts old request and starts a new one');
+  oldRequest.resolve({ ok: true, json: async () => [original] }); await tick();
+  assert(text('device-count') === '0', 'Late response from old page is ignored');
+  pending.resolve({ ok: true, json: async () => [original] }); await tick();
+  assert(text('device-count') === '1', 'New page accepts its own response');
+  document.getElementById('results').textContent = results.join('\n') + '\nALL PASSED';
+} catch (error) {
+  document.getElementById('results').textContent = results.join('\n') + '\nFAIL ' + error.stack;
+}
+</script>

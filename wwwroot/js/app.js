@@ -1,23 +1,27 @@
 import { renderTopbar } from "./topbar.js";
-import { renderTrackingPage } from "./pages/tracking.js";
+import { renderTrackingPage, updateTrackingDevices, openTrackingDevicePanel, setTrackingConnectionStatus } from "./pages/tracking.js?v=2";
 import { renderDevicesPage, initializeDevicesPage } from "./pages/devices/devices.js?v=3";
 import {
   renderHistoryPage,
   initializeHistoryPage,
 } from "./pages/history/history.js?v=2";
-import { getDevices } from "./api.js?v=2";
+import { getDevices } from "./api.js?v=3";
 import {
   initializeMap,
   destroyMap,
   renderDevices,
   focusDevice,
-} from "./map.js";
+  fitAllDevices,
+  resizeMap,
+} from "./map.js?v=2";
 
-import { formatDate } from "./popup.js";
+
 
 let currentPage = null;
 
 let trackingInterval = null;
+let trackingSession = 0;
+let trackingRequest = null;
 
 renderTopbar();
 
@@ -75,109 +79,68 @@ function startTracking() {
   try {
     initializeMap();
   } catch (error) {
-    const statusElement = document.getElementById("connection-status");
-
-    if (statusElement) {
-      statusElement.textContent = error.message;
-
-      statusElement.classList.add("error");
-    }
-
+    setTrackingConnectionStatus(error.message, true);
     return;
   }
-
   loadDevices();
-
-  trackingInterval = setInterval(loadDevices, 15000);
+  trackingInterval = setInterval(() => {
+    if (document.getElementById("auto-refresh")?.checked) loadDevices();
+  }, 15000);
+  document.getElementById("auto-refresh")?.addEventListener("change", (event) => {
+    if (event.target.checked) loadDevices();
+    else setTrackingConnectionStatus("Đã tạm dừng tự động cập nhật");
+  });
 }
 
 function stopTracking() {
-  if (trackingInterval) {
-    clearInterval(trackingInterval);
-
-    trackingInterval = null;
-  }
-
+  trackingSession++;
+  clearInterval(trackingInterval);
+  trackingInterval = null;
+  trackingRequest?.abort();
+  trackingRequest = null;
   destroyMap();
 }
 
-/* DEVICE LIST */
-
-function renderDeviceList(devices) {
-  const deviceListElement = document.getElementById("device-list");
-
-  if (!deviceListElement) {
-    return;
-  }
-
-  deviceListElement.replaceChildren();
-
-  for (const device of devices) {
-    const button = document.createElement("button");
-
-    button.innerHTML = `
-      <strong>
-        ${device.mobileId}
-      </strong>
-
-      <small>
-        ${formatDate(device.updatedAt)}
-      </small>
-    `;
-
-    button.addEventListener("click", () => {
-      focusDevice(device.mobileId);
-    });
-
-    const item = document.createElement("li");
-
-    item.append(button);
-
-    deviceListElement.append(item);
-  }
-}
-
-/* LOAD DEVICES */
-
 async function loadDevices() {
-  if (currentPage !== "tracking") {
-    return;
-  }
-
-  const statusElement = document.getElementById("connection-status");
-
-  const countElement = document.getElementById("device-count");
-
+  if (currentPage !== "tracking" || trackingRequest) return;
+  const session = trackingSession;
+  const request = new AbortController();
+  trackingRequest = request;
+  const timeout = setTimeout(() => request.abort(), 12000);
   try {
-    const devices = await getDevices();
-
-    if (currentPage !== "tracking") {
-      return;
-    }
-
+    const devices = await getDevices({ signal: request.signal });
+    if (currentPage !== "tracking" || session !== trackingSession) return;
+    if (!Array.isArray(devices)) throw new Error("Dữ liệu thiết bị không hợp lệ");
+    updateTrackingDevices(devices);
     renderDevices(devices);
-
-    renderDeviceList(devices);
-
-    if (countElement) {
-      countElement.textContent = devices.length;
-    }
-
-    if (statusElement) {
-      statusElement.textContent = `Đã cập nhật: ${new Date().toLocaleTimeString(
-        "vi-VN",
-      )}`;
-
-      statusElement.classList.remove("error");
-    }
+    setTrackingConnectionStatus(document.getElementById("auto-refresh")?.checked
+      ? `Đã cập nhật: ${new Date().toLocaleTimeString("vi-VN")}`
+      : "Đã tạm dừng tự động cập nhật");
   } catch (error) {
-    if (statusElement) {
-      statusElement.textContent = `Không tải được dữ liệu: ${error.message}`;
-
-      statusElement.classList.add("error");
-    }
+    if (session !== trackingSession || currentPage !== "tracking") return;
+    setTrackingConnectionStatus(error.name === "AbortError"
+      ? "Tải dữ liệu quá thời gian. Sẽ thử lại ở lần cập nhật tiếp theo."
+      : `Không tải được dữ liệu: ${error.message}`, true);
+  } finally {
+    clearTimeout(timeout);
+    if (trackingRequest === request) trackingRequest = null;
   }
 }
+
+window.addEventListener("tracking:marker-selected", (event) => {
+  if (currentPage === "tracking") openTrackingDevicePanel(event.detail.mobileId);
+});
+for (const eventName of ["tracking:device-selected", "tracking:focus-device"]) {
+  window.addEventListener(eventName, (event) => {
+    if (currentPage === "tracking") focusDevice(event.detail.mobileId);
+  });
+}
+window.addEventListener("tracking:fit-all", () => {
+  if (currentPage === "tracking") fitAllDevices();
+});
+window.addEventListener("tracking:map-resize", () => {
+  if (currentPage === "tracking") resizeMap();
+});
 
 /* START */
 

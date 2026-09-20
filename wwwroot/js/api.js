@@ -1,5 +1,5 @@
-export async function getDevices() {
-  const response = await fetch("/api/devices");
+export async function getDevices({ signal } = {}) {
+  const response = await fetch("/api/devices", { signal });
 
   if (!response.ok) {
     throw new Error(`API trả về ${response.status}`);

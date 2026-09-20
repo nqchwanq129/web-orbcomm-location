@@ -1,4 +1,4 @@
-import { popupContent } from "./popup.js";
+
 
 let map;
 
@@ -72,69 +72,61 @@ export function renderDevices(devices) {
     return;
   }
 
-  const currentIds = new Set(devices.map((device) => device.mobileId));
-
+  const validDevices = devices.filter(device => device && typeof device.mobileId === "string" && device.mobileId
+    && device.longitude !== null && device.longitude !== undefined && device.longitude !== ""
+    && device.latitude !== null && device.latitude !== undefined && device.latitude !== ""
+    && Number.isFinite(Number(device.longitude)) && Math.abs(Number(device.longitude)) <= 180
+    && Number.isFinite(Number(device.latitude)) && Math.abs(Number(device.latitude)) <= 90);
+  const currentIds = new Set(validDevices.map(device => device.mobileId));
   for (const [mobileId, marker] of markers) {
     if (!currentIds.has(mobileId)) {
       marker.remove();
-
       markers.delete(mobileId);
     }
   }
-
-  for (const device of devices) {
-    const longitude = Number(device.longitude);
-
-    const latitude = Number(device.latitude);
-
-    if (!Number.isFinite(longitude) || !Number.isFinite(latitude)) {
-      continue;
-    }
-
+  for (const device of validDevices) {
+    const position = [Number(device.longitude), Number(device.latitude)];
     let marker = markers.get(device.mobileId);
-
     if (!marker) {
-      const popup = new window.maplibregl.Popup({
-        offset: 25,
-
-        maxWidth: "320px",
-      }).setHTML(popupContent(device));
-
-      marker = new window.maplibregl.Marker()
-        .setLngLat([longitude, latitude])
-        .setPopup(popup)
-        .addTo(map);
-
+      marker = new window.maplibregl.Marker().setLngLat(position).addTo(map);
+      const element = marker.getElement();
+      element.setAttribute("role", "button");
+      element.setAttribute("tabindex", "0");
+      element.setAttribute("aria-label", `Chi tiết thiết bị ${device.mobileId}`);
+      element.style.cursor = "pointer";
+      const select = () => window.dispatchEvent(new CustomEvent("tracking:marker-selected", {
+        detail: { mobileId: device.mobileId },
+      }));
+      element.addEventListener("click", select);
+      element.addEventListener("keydown", (event) => {
+        if (event.key === "Enter" || event.key === " ") {
+          event.preventDefault();
+          select();
+        }
+      });
       markers.set(device.mobileId, marker);
     } else {
-      marker.setLngLat([longitude, latitude]);
-
-      marker.getPopup().setHTML(popupContent(device));
+      marker.setLngLat(position);
     }
+    const color = device.staleFix === true ? "#f59e0b"
+      : device.motionState === true ? "#22c55e" : device.motionState === false ? "#94a3b8" : "#667085";
+    marker.getElement().querySelector('svg g[fill]')?.setAttribute("fill", color);
   }
-
-  if (!hasFittedToDevices && devices.length > 0) {
-    const bounds = new window.maplibregl.LngLatBounds();
-
-    for (const device of devices) {
-      const longitude = Number(device.longitude);
-
-      const latitude = Number(device.latitude);
-
-      if (Number.isFinite(longitude) && Number.isFinite(latitude)) {
-        bounds.extend([longitude, latitude]);
-      }
-    }
-
-    if (!bounds.isEmpty()) {
-      map.fitBounds(bounds, {
-        padding: 60,
-        maxZoom: 14,
-      });
-    }
-
+  if (!hasFittedToDevices && markers.size) {
+    fitAllDevices();
     hasFittedToDevices = true;
   }
+}
+
+export function fitAllDevices() {
+  if (!map || !markers.size) return;
+  const bounds = new window.maplibregl.LngLatBounds();
+  for (const marker of markers.values()) bounds.extend(marker.getLngLat());
+  map.fitBounds(bounds, { padding: 60, maxZoom: 14 });
+}
+
+export function resizeMap() {
+  map?.resize();
 }
 
 /* FOCUS DEVICE */
@@ -156,5 +148,5 @@ export function focusDevice(mobileId) {
     zoom: 15,
   });
 
-  marker.togglePopup();
+
 }
