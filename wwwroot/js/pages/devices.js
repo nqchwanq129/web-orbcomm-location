@@ -8,10 +8,16 @@ let currentPage = 1;
 const pageSize = 12;
 const addressCache = new Map();
 let updateTimeTimer;
+let deviceDetailMap = null;
 const localDateFormatter = new Intl.DateTimeFormat("vi-VN", {
-  day: "2-digit", month: "2-digit", year: "numeric",
-  hour: "2-digit", minute: "2-digit", second: "2-digit",
-  hourCycle: "h23", timeZoneName: "short",
+  day: "2-digit",
+  month: "2-digit",
+  year: "numeric",
+  hour: "2-digit",
+  minute: "2-digit",
+  second: "2-digit",
+  hourCycle: "h23",
+  timeZoneName: "short",
 });
 const relativeTimeFormatter = new Intl.RelativeTimeFormat("vi-VN", {
   numeric: "always",
@@ -258,6 +264,11 @@ function renderDevicesTable() {
     const row = document.createElement("tr");
     const locationId = `device-location-${device.mobileId}`;
 
+    row.className = "devices-table__row";
+    row.addEventListener("click", () => {
+      renderDeviceDetailPage(device);
+    });
+
     row.innerHTML = `
     <td>
       <strong class="devices-table__device">
@@ -271,7 +282,12 @@ function renderDevicesTable() {
         </span>
       </div>
     </td>
-    <td class="devices-table__updated"></td>
+    <td class="devices-table__updated-cell">
+  <div class="devices-table__updated-wrapper">
+    <span class="devices-table__updated"></span>
+    <span class="devices-table__arrow">›</span>
+  </div>
+</td>
   `;
 
     const updatedCell = row.querySelector(".devices-table__updated");
@@ -302,9 +318,269 @@ function renderDevicesTable() {
     });
 
     loadDeviceAddress(locationId, device.latitude, device.longitude);
+    loadDeviceAddress(
+      "device-detail-history-address",
+      device.latitude,
+      device.longitude,
+    );
   }
 
   updatePagination();
+}
+
+// Hiển thị chi tiết thiết bị
+function renderDeviceDetailPage(device) {
+  clearTimeout(updateTimeTimer);
+
+  const pageContent = document.getElementById("page-content");
+  const reportTime = parseReportTime(device.reportTimestampUtc);
+  const updateText = reportTime
+    ? formatUpdateTime(reportTime)
+    : "Chưa có dữ liệu";
+
+  pageContent.innerHTML = `
+    <section class="device-detail">
+      <button class="device-detail__back" id="device-detail-back" type="button">
+        ← Danh sách thiết bị
+      </button>
+
+<div class="device-detail__header">
+  <div class="device-detail__heading">
+    <span class="device-detail__eyebrow">Chi tiết thiết bị</span>
+
+    <div class="device-detail__title-row">
+      <h1 class="device-detail__title">
+        ${escapeHtml(device.mobileId ?? "Không xác định")}
+      </h1>
+
+      <span class="device-detail__status ${getMotionClass(device.motionState)}">
+        <span class="device-detail__status-dot"></span>
+        ${getMotionText(device.motionState)}
+      </span>
+    </div>
+
+    <p class="device-detail__updated">
+      Cập nhật ${escapeHtml(updateText)}
+    </p>
+  </div>
+
+  <div class="device-detail__actions">
+    <button
+      id="device-detail-locate"
+      class="device-detail__action"
+      type="button"
+    >
+      Định vị
+    </button>
+
+    <button
+      id="device-detail-history"
+      class="device-detail__action device-detail__action--primary"
+      type="button"
+    >
+      Xem lịch sử
+    </button>
+  </div>
+</div>
+
+      <div class="device-detail__map" id="device-detail-map"></div>
+
+      <div class="device-detail__stats">
+        ${renderDeviceStat("Tốc độ", formatSpeed(device.speedKph))}
+        ${renderDeviceStat("Hướng", formatHeading(device.headingDeg))}
+        ${renderDeviceStat("Pin", formatBattery(device.batteryMv))}
+        ${renderDeviceStat("Trạng thái", getMotionText(device.motionState))}
+      </div>
+
+<div class="device-detail__grid">
+  <div class="device-detail__card">
+    <span class="device-detail__card-title">Vị trí hiện tại</span>
+
+    <p
+      id="device-detail-address"
+      class="device-detail__address"
+    >
+      Đang xác định vị trí...
+    </p>
+
+    <div class="device-detail__location-row">
+      <span>Tọa độ</span>
+      <strong>
+        ${formatCoordinate(device.latitude)},
+        ${formatCoordinate(device.longitude)}
+      </strong>
+    </div>
+  </div>
+
+  <div class="device-detail__history" id="device-detail-history-section">
+  <div class="device-detail__history-header">
+    <div>
+      <span class="device-detail__card-title">Lịch sử gần đây</span>
+      <p>Hoạt động mới nhất của thiết bị.</p>
+    </div>
+
+    <button
+      class="device-detail__history-all"
+      id="device-detail-history-all"
+      type="button"
+    >
+      Xem toàn bộ
+    </button>
+  </div>
+
+  <div class="device-detail__history-table-wrapper">
+    <table class="device-detail__history-table">
+      <thead>
+        <tr>
+          <th>Thời gian</th>
+          <th>Trạng thái</th>
+          <th>Tốc độ</th>
+          <th>Vị trí</th>
+        </tr>
+      </thead>
+
+      <tbody>
+        <tr>
+          <td>
+            ${
+              reportTime
+                ? escapeHtml(localDateFormatter.format(reportTime))
+                : "—"
+            }
+          </td>
+
+          <td>
+            <span class="device-detail__history-status ${getMotionClass(device.motionState)}">
+              <span></span>
+              ${escapeHtml(getMotionText(device.motionState))}
+            </span>
+          </td>
+
+          <td>
+            ${escapeHtml(formatSpeed(device.speedKph))}
+          </td>
+
+          <td>
+            <span id="device-detail-history-address">
+              Đang xác định vị trí...
+            </span>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+
+  <div class="device-detail__card">
+    <span class="device-detail__card-title">Thông tin thiết bị</span>
+
+    <div class="device-detail__info">
+      <span>Mobile ID</span>
+      <strong>${escapeHtml(device.mobileId ?? "—")}</strong>
+    </div>
+
+    <div class="device-detail__info">
+      <span>Loại bản tin</span>
+      <strong>${escapeHtml(device.messageType ?? "—")}</strong>
+    </div>
+
+    <div class="device-detail__info">
+      <span>Thời gian báo cáo</span>
+      <strong>
+        ${reportTime ? escapeHtml(localDateFormatter.format(reportTime)) : "—"}
+      </strong>
+    </div>
+  </div>
+</div>
+    </section>
+  `;
+
+  document
+    .getElementById("device-detail-back")
+    .addEventListener("click", async () => {
+      renderDevicesPage();
+      await initializeDevicesPage();
+    });
+
+  const historyButton = document.getElementById("device-detail-history");
+
+  historyButton.addEventListener("click", () => {
+    document.getElementById("device-detail-history-section")?.scrollIntoView({
+      behavior: "smooth",
+      block: "start",
+    });
+  });
+
+  loadDeviceAddress("device-detail-address", device.latitude, device.longitude);
+  renderDeviceDetailMap(device);
+
+  const locateButton = document.getElementById("device-detail-locate");
+
+  locateButton.addEventListener("click", () => {
+    const latitude = Number(device.latitude);
+    const longitude = Number(device.longitude);
+
+    if (!deviceDetailMap) return;
+    if (!Number.isFinite(latitude) || !Number.isFinite(longitude)) return;
+
+    deviceDetailMap.flyTo({
+      center: [longitude, latitude],
+      zoom: 16,
+      duration: 1000,
+    });
+  });
+}
+// Lấy class trạng thái chuyển động
+function getMotionClass(value) {
+  if (value === true) return "device-detail__status--moving";
+  if (value === false) return "device-detail__status--stopped";
+  return "device-detail__status--unknown";
+}
+// Hiển thị bản đồ chi tiết thiết bị
+function renderDeviceDetailMap(device) {
+  const latitude = Number(device.latitude);
+  const longitude = Number(device.longitude);
+
+  if (!Number.isFinite(latitude) || !Number.isFinite(longitude)) return;
+
+  deviceDetailMap = new maplibregl.Map({
+    container: "device-detail-map",
+    style: {
+      version: 8,
+      sources: {
+        osm: {
+          type: "raster",
+          tiles: ["https://tile.openstreetmap.org/{z}/{x}/{y}.png"],
+          tileSize: 256,
+          attribution: "© OpenStreetMap contributors",
+        },
+      },
+      layers: [
+        {
+          id: "osm",
+          type: "raster",
+          source: "osm",
+        },
+      ],
+    },
+    center: [longitude, latitude],
+    zoom: 15,
+  });
+
+  deviceDetailMap.addControl(new maplibregl.NavigationControl(), "top-right");
+
+  const markerElement = document.createElement("div");
+  markerElement.className = "device-detail__marker";
+  markerElement.innerHTML = `
+  <span class="device-detail__marker-dot"></span>
+`;
+
+  new maplibregl.Marker({
+    element: markerElement,
+    anchor: "center",
+  })
+    .setLngLat([longitude, latitude])
+    .addTo(deviceDetailMap);
 }
 
 // Hiển thị trạng thái đang tải
@@ -370,11 +646,62 @@ function formatUpdateTime(date) {
     return localDateFormatter.format(date);
   }
   if (elapsedSeconds < 60) return "Vừa xong";
-  for (const [unit, seconds] of [["day", 86400], ["hour", 3600], ["minute", 60]]) {
+  for (const [unit, seconds] of [
+    ["day", 86400],
+    ["hour", 3600],
+    ["minute", 60],
+  ]) {
     if (elapsedSeconds >= seconds) {
-      return relativeTimeFormatter.format(-Math.floor(elapsedSeconds / seconds), unit);
+      return relativeTimeFormatter.format(
+        -Math.floor(elapsedSeconds / seconds),
+        unit,
+      );
     }
   }
+}
+
+// Hiển thị ô trạng thái
+function renderDeviceStat(label, value) {
+  return `
+    <div class="device-detail__stat">
+      <span>${escapeHtml(label)}</span>
+      <strong>${escapeHtml(value)}</strong>
+    </div>
+  `;
+}
+
+// Định dạng trạng thái chuyển động
+function getMotionText(value) {
+  if (value === true) return "Đang di chuyển";
+  if (value === false) return "Đứng yên";
+  return "Không xác định";
+}
+
+// Định dạng tốc độ
+function formatSpeed(value) {
+  const speed = Number(value);
+  return Number.isFinite(speed) ? `${speed.toFixed(1)} km/h` : "—";
+}
+
+// Định dạng hướng
+function formatHeading(value) {
+  const heading = Number(value);
+  return Number.isFinite(heading) ? `${heading.toFixed(0)}°` : "—";
+}
+
+// Định dạng pin
+function formatBattery(value) {
+  const battery = Number(value);
+
+  if (!Number.isFinite(battery)) return "—";
+
+  return `${(battery / 1000).toFixed(2)} V`;
+}
+
+// Định dạng tọa độ
+function formatCoordinate(value) {
+  const coordinate = Number(value);
+  return Number.isFinite(coordinate) ? coordinate.toFixed(6) : "—";
 }
 
 // Chống chèn HTML
