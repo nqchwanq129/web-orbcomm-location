@@ -1,0 +1,89 @@
+/* RESPONSIVE */
+@media (max-width: 900px) {
+  .devices-page {
+    padding: 18px;
+  }
+
+  .devices-toolbar {
+    align-items: stretch;
+    flex-direction: column;
+  }
+
+  .devices-search {
+    max-width: none;
+  }
+
+  .devices-filter {
+    width: 100%;
+  }
+
+  .device-detail__grid {
+    grid-template-columns: 1fr;
+  }
+
+  .device-detail__stats {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 700px) {
+  .device-detail__header {
+    align-items: flex-start;
+    flex-direction: column;
+  }
+
+  .device-detail__title-row {
+    align-items: flex-start;
+    flex-direction: column;
+  }
+
+  .device-detail__actions {
+    width: 100%;
+  }
+
+  .device-detail__action {
+    flex: 1;
+  }
+}
+
+@media (max-width: 640px) {
+  .devices-page {
+    padding: 12px;
+  }
+
+  .devices-page__title {
+    font-size: 1.2rem;
+  }
+
+  .devices-page__subtitle {
+    font-size: 0.78rem;
+  }
+
+  .devices-card {
+    border-radius: 11px;
+  }
+
+  .devices-card__header {
+    padding: 16px 12px 0;
+  }
+
+  .devices-toolbar {
+    padding: 12px;
+  }
+
+  .devices-table th,
+  .devices-table td {
+    padding: 12px 13px;
+  }
+
+  .devices-footer {
+    align-items: flex-start;
+    flex-direction: column;
+  }
+}
+
+@media (max-width: 520px) {
+  .device-detail__stats {
+    grid-template-columns: 1fr;
+  }
+}

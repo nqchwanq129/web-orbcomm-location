@@ -1,10 +1,10 @@
 import { renderTopbar } from "./topbar.js";
 import { renderTrackingPage } from "./pages/tracking.js";
-import { renderDevicesPage, initializeDevicesPage } from "./pages/devices.js";
+import { renderDevicesPage, initializeDevicesPage } from "./pages/devices/devices.js?v=3";
 import {
   renderHistoryPage,
   initializeHistoryPage,
-} from "./pages/history.js?v=8";
+} from "./pages/history/history.js?v=2";
 import { getDevices } from "./api.js?v=2";
 import {
   initializeMap,
@@ -25,7 +25,7 @@ const navigationItems = document.querySelectorAll(".topbar__nav-item");
 
 /* PAGE */
 
-function showPage(page) {
+function showPage(page, options = {}) {
   stopTracking();
 
   currentPage = page;
@@ -38,7 +38,7 @@ function showPage(page) {
 
     case "history":
       renderHistoryPage();
-      initializeHistoryPage();
+      initializeHistoryPage(options);
 
       break;
 
@@ -58,6 +58,10 @@ function showPage(page) {
     );
   }
 }
+
+document.addEventListener("device:show-history", (event) => {
+  showPage("history", { mobileId: event.detail.mobileId });
+});
 
 for (const item of navigationItems) {
   item.addEventListener("click", () => {
