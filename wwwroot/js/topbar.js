@@ -10,7 +10,7 @@ export function renderTopbar() {
       <div class="topbar__logo">
         <img
           src="/assets/logos/vishipel-logo.png"
-          alt="ORBCOMM Logo"
+          alt="Vishipel"
         />
       </div>
       <div class="topbar__brand-text">
@@ -87,11 +87,14 @@ export function renderTopbar() {
       </button>
 
 
+      <div class="topbar__account">
       <button
         class="topbar__profile"
         type="button"
-        title="Đăng xuất"
-        aria-label="Đăng xuất">
+        aria-label="Mở menu tài khoản"
+        aria-haspopup="menu"
+        aria-expanded="false"
+        aria-controls="account-menu">
 
         <span class="topbar__avatar">
           A
@@ -113,6 +116,13 @@ export function renderTopbar() {
         </svg>
 
       </button>
+      <div id="account-menu" class="topbar__account-menu" role="menu" hidden>
+        <div class="topbar__account-label">Đang đăng nhập</div>
+        <div class="topbar__account-username"></div>
+        <div class="topbar__account-divider"></div>
+        <button class="topbar__logout" type="button" role="menuitem">Đăng xuất</button>
+      </div>
+      </div>
 
     </div>
   `;

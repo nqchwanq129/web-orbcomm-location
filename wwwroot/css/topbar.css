@@ -2,7 +2,7 @@
 
 .topbar {
   display: grid;
-  grid-template-columns: 240px minmax(280px, 1fr) minmax(300px, auto);
+  grid-template-columns: 240px minmax(280px, 1fr) 440px;
   align-items: center;
   gap: 28px;
 
@@ -185,6 +185,8 @@
   display: flex;
   align-items: center;
   gap: 7px;
+  flex: 0 0 200px;
+  min-width: 0;
 
   padding: 6px 10px;
 
@@ -197,6 +199,12 @@
   font-size: 0.74rem;
 
   white-space: nowrap;
+}
+
+.topbar__connection #connection-status {
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 .topbar__connection-dot {
@@ -282,6 +290,11 @@
 
 /* PROFILE */
 
+.topbar__account {
+  position: relative;
+  flex: 0 0 auto;
+}
+
 .topbar__profile {
   display: flex;
   align-items: center;
@@ -307,6 +320,81 @@
 
 .topbar__profile:hover {
   background: rgb(255 255 255 / 10%);
+}
+
+.topbar__profile:focus-visible,
+.topbar__logout:focus-visible {
+  outline: 2px solid var(--brand-orange);
+  outline-offset: 2px;
+}
+
+.topbar__profile[aria-expanded="true"] {
+  background: rgb(255 255 255 / 14%);
+}
+
+.topbar__profile[aria-expanded="true"] .topbar__chevron {
+  transform: rotate(180deg);
+}
+
+.topbar__account-menu {
+  position: absolute;
+  top: calc(100% + 8px);
+  right: 0;
+  z-index: 30;
+  width: 210px;
+  padding: 12px;
+  border: 1px solid var(--brand-border);
+  border-radius: 10px;
+  background: #fff;
+  box-shadow: 0 14px 36px rgb(29 24 75 / 18%);
+  color: var(--brand-navy);
+}
+
+.topbar__account-menu[hidden] {
+  display: none;
+}
+
+.topbar__account-label {
+  color: #667085;
+  font-size: 0.72rem;
+}
+
+.topbar__account-username {
+  margin-top: 3px;
+  overflow: hidden;
+  font-size: 0.88rem;
+  font-weight: 700;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.topbar__account-divider {
+  height: 1px;
+  margin: 10px 0 6px;
+  background: var(--brand-border);
+}
+
+.topbar__logout {
+  width: 100%;
+  padding: 9px 10px;
+  border: 0;
+  border-radius: 6px;
+  background: transparent;
+  color: var(--brand-navy);
+  font: inherit;
+  font-size: 0.84rem;
+  text-align: left;
+  cursor: pointer;
+}
+
+.topbar__logout:hover {
+  background: var(--brand-orange-soft);
+  color: var(--brand-orange-ink);
+}
+
+.topbar__logout:disabled {
+  opacity: 0.6;
+  cursor: wait;
 }
 
 .topbar__avatar {
@@ -360,7 +448,7 @@
 
 /* RESPONSIVE */
 
-@media (max-width: 1100px) {
+@media (max-width: 1200px) {
   .topbar {
     grid-template-columns:
       240px

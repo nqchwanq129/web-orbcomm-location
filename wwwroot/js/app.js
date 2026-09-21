@@ -1,4 +1,4 @@
-import { renderTopbar } from "./topbar.js";
+import { renderTopbar } from "./topbar.js?v=2";
 import { renderTrackingPage, updateTrackingDevices, openTrackingDevicePanel, setTrackingConnectionStatus } from "./pages/tracking/tracking.js?v=1";
 import { renderDevicesPage, initializeDevicesPage } from "./pages/devices/devices.js?v=3";
 import {
@@ -25,16 +25,51 @@ let trackingRequest = null;
 
 renderTopbar();
 
+const account = document.querySelector(".topbar__account");
+const profileButton = account.querySelector(".topbar__profile");
+const accountMenu = account.querySelector(".topbar__account-menu");
+
+function closeAccountMenu() {
+  accountMenu.hidden = true;
+  profileButton.setAttribute("aria-expanded", "false");
+}
+
+profileButton.addEventListener("click", () => {
+  const shouldOpen = accountMenu.hidden;
+  accountMenu.hidden = !shouldOpen;
+  profileButton.setAttribute("aria-expanded", String(shouldOpen));
+  if (shouldOpen) account.querySelector(".topbar__logout").focus();
+});
+
+document.addEventListener("click", (event) => {
+  if (!account.contains(event.target)) closeAccountMenu();
+});
+
+document.addEventListener("keydown", (event) => {
+  if (event.key === "Escape" && !accountMenu.hidden) {
+    closeAccountMenu();
+    profileButton.focus();
+  }
+});
+
 fetch("/api/auth/me").then(async (response) => {
   if (!response.ok) return;
   const user = await response.json();
   document.querySelector(".topbar__profile-name").textContent = user.username || "Tài khoản";
+  document.querySelector(".topbar__account-username").textContent = user.username || "Tài khoản";
   document.querySelector(".topbar__avatar").textContent = (user.username || "T").charAt(0).toUpperCase();
 }).catch(() => {});
 
-document.querySelector(".topbar__profile").addEventListener("click", async () => {
-  const response = await fetch("/api/auth/logout", { method: "POST" });
-  if (response.ok) window.location.replace("/login.html");
+account.querySelector(".topbar__logout").addEventListener("click", async () => {
+  const logoutButton = account.querySelector(".topbar__logout");
+  logoutButton.disabled = true;
+  try {
+    const response = await fetch("/api/auth/logout", { method: "POST" });
+    if (response.ok) window.location.replace("/login.html");
+    else logoutButton.disabled = false;
+  } catch {
+    logoutButton.disabled = false;
+  }
 });
 
 const navigationItems = document.querySelectorAll(".topbar__nav-item");

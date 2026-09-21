@@ -43,7 +43,7 @@ body {
 
 #topbar {
   position: relative;
-  z-index: 2;
+  z-index: 50;
   grid-row: 1;
   min-width: 0;
 }
