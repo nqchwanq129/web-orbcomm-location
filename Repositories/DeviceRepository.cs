@@ -39,8 +39,48 @@ public sealed class DeviceRepository : IDeviceRepository
                 StaleFix,
                 BatteryVoltage,
                 InternalTemperatureC,
-                UpdatedAt
-            FROM dbo.DeviceLastPosition
+                UpdatedAt,
+                door.SensorValue AS DoorValue,
+                door.BatteryLevel AS DoorBatteryLevel,
+                door.SensorMessageUtc AS DoorMessageUtc,
+                distress.SensorValue AS DistressValue,
+                distress.BatteryLevel AS DistressBatteryLevel,
+                distress.SensorMessageUtc AS DistressMessageUtc
+            FROM dbo.DeviceLastPosition AS position
+            OUTER APPLY (
+                SELECT TOP (1)
+                    TRY_CONVERT(int, sensor.SensorValue) AS SensorValue,
+                    TRY_CONVERT(int, sensor.BatteryLevel) AS BatteryLevel,
+                    log.MessageUTC AS SensorMessageUtc
+                FROM dbo.MessageLog AS log
+                CROSS APPLY OPENJSON(
+                    CASE WHEN ISJSON(log.SensorsJson) = 1 THEN log.SensorsJson ELSE N'[]' END
+                ) WITH (
+                    SensorType nvarchar(50) '$.typeName',
+                    SensorValue nvarchar(50) '$.value',
+                    BatteryLevel nvarchar(50) '$.batteryLevel',
+                    SensorIndex int '$.index'
+                ) AS sensor
+                WHERE log.MobileID = position.MobileID AND sensor.SensorType = N'Door'
+                ORDER BY log.MessageUTC DESC, log.LogID DESC, sensor.SensorIndex
+            ) AS door
+            OUTER APPLY (
+                SELECT TOP (1)
+                    TRY_CONVERT(int, sensor.SensorValue) AS SensorValue,
+                    TRY_CONVERT(int, sensor.BatteryLevel) AS BatteryLevel,
+                    log.MessageUTC AS SensorMessageUtc
+                FROM dbo.MessageLog AS log
+                CROSS APPLY OPENJSON(
+                    CASE WHEN ISJSON(log.SensorsJson) = 1 THEN log.SensorsJson ELSE N'[]' END
+                ) WITH (
+                    SensorType nvarchar(50) '$.typeName',
+                    SensorValue nvarchar(50) '$.value',
+                    BatteryLevel nvarchar(50) '$.batteryLevel',
+                    SensorIndex int '$.index'
+                ) AS sensor
+                WHERE log.MobileID = position.MobileID AND sensor.SensorType = N'DistressButton'
+                ORDER BY log.MessageUTC DESC, log.LogID DESC, sensor.SensorIndex
+            ) AS distress
             ORDER BY MobileID;
             """;
 

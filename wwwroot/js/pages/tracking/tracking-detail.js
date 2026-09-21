@@ -5,6 +5,7 @@ import {
   toNumberOrNull,
 } from "./tracking-state.js";
 import { renderTrackingDeviceList } from "./tracking-sidebar.js";
+import { formatTrackingSensor } from "./tracking-sensors.js";
 
 // Mở panel chi tiết
 export function openTrackingDevicePanel(mobileId) {
@@ -64,6 +65,12 @@ export function closeTrackingDevicePanel() {
 
 // Hiển thị chi tiết thiết bị
 export function renderTrackingDeviceDetail(device) {
+  setText("tracking-detail-door", formatTrackingSensor(
+    device.doorValue, device.doorBatteryLevel, device.doorMessageUtc, "Door",
+  ));
+  setText("tracking-detail-distress", formatTrackingSensor(
+    device.distressValue, device.distressBatteryLevel, device.distressMessageUtc, "DistressButton",
+  ));
   setText("tracking-detail-mobile-id", device.mobileId);
   setText("tracking-detail-state-text", device.statusText);
   setText("tracking-detail-updated", device.updatedText);

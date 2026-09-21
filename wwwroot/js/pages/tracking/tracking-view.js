@@ -329,6 +329,16 @@ function renderTrackingDetailPanel() {
 
           <section class="tracking-detail-section">
             <div class="tracking-detail-section__title">
+              <h3>Cảm biến</h3>
+            </div>
+            <dl class="tracking-detail-info">
+              <div><dt>Cảm biến cửa</dt><dd id="tracking-detail-door">Chưa có dữ liệu</dd></div>
+              <div><dt>Nút báo nguy</dt><dd id="tracking-detail-distress">Chưa có dữ liệu</dd></div>
+            </dl>
+          </section>
+
+          <section class="tracking-detail-section">
+            <div class="tracking-detail-section__title">
               <h3>Chất lượng vị trí GPS</h3>
               <span id="tracking-alert-badge" class="tracking-alert-badge">--</span>
             </div>

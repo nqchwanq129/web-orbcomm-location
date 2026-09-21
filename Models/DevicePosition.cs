@@ -18,4 +18,10 @@ public sealed class DevicePosition
     public decimal? BatteryVoltage { get; init; }
     public short? InternalTemperatureC { get; init; }
     public DateTime UpdatedAt { get; init; }
+    public int? DoorValue { get; init; }
+    public int? DoorBatteryLevel { get; init; }
+    public DateTime? DoorMessageUtc { get; init; }
+    public int? DistressValue { get; init; }
+    public int? DistressBatteryLevel { get; init; }
+    public DateTime? DistressMessageUtc { get; init; }
 }
