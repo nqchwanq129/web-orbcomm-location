@@ -8,7 +8,7 @@ export async function getDevices({ signal } = {}) {
   return response.json();
 }
 
-export async function getDeviceHistory({ mobileId, from, to, messageType }) {
+export async function getDeviceHistory({ mobileId, from, to, messageType, signal }) {
   const params = new URLSearchParams();
 
   if (mobileId) {
@@ -27,7 +27,7 @@ export async function getDeviceHistory({ mobileId, from, to, messageType }) {
     params.set("messageType", messageType);
   }
 
-  const response = await fetch(`/api/devices/history?${params.toString()}`);
+  const response = await fetch(`/api/devices/history?${params.toString()}`, { signal });
 
   if (!response.ok) {
     throw new Error(`API trả về ${response.status}`);

@@ -45,6 +45,9 @@ export function renderTopbar() {
         data-page="history">
         Lịch sử
       </button>
+      <button class="topbar__nav-item" type="button" data-page="journey">
+        Hành trình
+      </button>
     </nav>
 
 

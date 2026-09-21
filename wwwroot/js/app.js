@@ -1,4 +1,4 @@
-import { renderTopbar } from "./topbar.js?v=2";
+import { renderTopbar } from "./topbar.js?v=3";
 import { renderTrackingPage, updateTrackingDevices, openTrackingDevicePanel, setTrackingConnectionStatus } from "./pages/tracking/tracking.js?v=1";
 import { renderDevicesPage, initializeDevicesPage } from "./pages/devices/devices.js?v=3";
 import {
@@ -6,6 +6,7 @@ import {
   initializeHistoryPage,
 } from "./pages/history/history.js?v=2";
 import { getDevices } from "./api.js?v=3";
+import { renderJourneyPage, initializeJourneyPage, destroyJourneyPage } from "./pages/journey/journey.js?v=1";
 import {
   initializeMap,
   destroyMap,
@@ -78,6 +79,7 @@ const navigationItems = document.querySelectorAll(".topbar__nav-item");
 
 function showPage(page, options = {}) {
   stopTracking();
+  destroyJourneyPage();
 
   currentPage = page;
 
@@ -91,6 +93,11 @@ function showPage(page, options = {}) {
       renderHistoryPage();
       initializeHistoryPage(options);
 
+      break;
+
+    case "journey":
+      renderJourneyPage();
+      initializeJourneyPage(options);
       break;
 
     case "tracking":
