@@ -89,14 +89,16 @@ export function renderTopbar() {
 
       <button
         class="topbar__profile"
-        type="button">
+        type="button"
+        title="Đăng xuất"
+        aria-label="Đăng xuất">
 
         <span class="topbar__avatar">
           A
         </span>
 
         <span class="topbar__profile-name">
-          Admin
+          Tài khoản
         </span>
 
         <svg

@@ -1,0 +1,240 @@
+<!doctype html>
+<html lang="vi">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Đăng nhập | ORBCOMM Tracking</title>
+    <link rel="stylesheet" href="/css/login.css" />
+  </head>
+  <body>
+    <main class="login-page">
+      <section class="login-hero">
+        <div class="login-hero__grid"></div>
+
+        <div class="login-hero__header">
+          <div class="brand">
+            <div class="brand__logo">
+              <img src="/assets/logos/vishipel-logo.png" alt="Vishipel" />
+            </div>
+            <div>
+              <h1>ORBCOMM Tracking</h1>
+              <p>SC1000 Fleet Monitoring</p>
+            </div>
+          </div>
+        </div>
+
+        <div class="login-hero__content">
+          <span class="login-hero__eyebrow"> Hệ thống giám sát thiết bị </span>
+
+          <h2>
+            Theo dõi đội thiết bị của bạn
+            <span>trong thời gian thực.</span>
+          </h2>
+
+          <p class="login-hero__description">
+            Quản lý vị trí, lịch sử hành trình, trạng thái cảm biến và cảnh báo
+            của thiết bị SC1000 trên một nền tảng duy nhất.
+          </p>
+
+          <div class="login-features">
+            <div class="login-feature">
+              <div class="login-feature__icon">
+                <svg viewBox="0 0 24 24" aria-hidden="true">
+                  <circle cx="12" cy="12" r="3"></circle>
+                  <path d="M12 2v3"></path>
+                  <path d="M12 19v3"></path>
+                  <path d="M2 12h3"></path>
+                  <path d="M19 12h3"></path>
+                  <circle cx="12" cy="12" r="7"></circle>
+                </svg>
+              </div>
+              <div>
+                <strong>Theo dõi trực tiếp</strong>
+                <span>Vị trí và trạng thái thiết bị</span>
+              </div>
+            </div>
+
+            <div class="login-feature">
+              <div class="login-feature__icon">
+                <svg viewBox="0 0 24 24" aria-hidden="true">
+                  <path d="M3 12a9 9 0 1 0 3-6.7"></path>
+                  <path d="M3 3v6h6"></path>
+                  <path d="M12 7v5l3 2"></path>
+                </svg>
+              </div>
+              <div>
+                <strong>Lịch sử hành trình</strong>
+                <span>Tra cứu tuyến đường và dữ liệu GPS</span>
+              </div>
+            </div>
+
+            <div class="login-feature">
+              <div class="login-feature__icon">
+                <svg viewBox="0 0 24 24" aria-hidden="true">
+                  <path
+                    d="M18 8a6 6 0 0 0-12 0c0 7-3 7-3 9h18c0-2-3-2-3-9"
+                  ></path>
+                  <path d="M10 21h4"></path>
+                </svg>
+              </div>
+              <div>
+                <strong>Cảnh báo & cảm biến</strong>
+                <span>Giám sát sự kiện thiết bị SC1000</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="login-hero__footer">
+          <span class="system-status">
+            <span class="system-status__dot"></span>
+            Hệ thống đang hoạt động
+          </span>
+
+          <span>SC1000 Tracking Platform</span>
+        </div>
+      </section>
+
+      <section class="login-auth">
+        <div class="login-auth__inner">
+          <div class="login-mobile-brand">
+            <div class="brand__logo">
+              <img src="/assets/logos/vishipel-logo.png" alt="Vishipel" />
+            </div>
+            <div>
+              <strong>ORBCOMM Tracking</strong>
+              <span>SC1000 Fleet Monitoring</span>
+            </div>
+          </div>
+
+          <div class="login-auth__heading">
+            <span class="login-auth__eyebrow">Chào mừng trở lại</span>
+            <h2>Đăng nhập hệ thống</h2>
+            <p>
+              Sử dụng tài khoản được cấp để truy cập hệ thống quản lý thiết bị.
+            </p>
+          </div>
+
+          <form id="login-form" class="login-form">
+            <div class="form-group">
+              <label for="username">Tên đăng nhập</label>
+
+              <div class="form-control">
+                <span class="form-control__icon">
+                  <svg viewBox="0 0 24 24" aria-hidden="true">
+                    <path d="M20 21a8 8 0 0 0-16 0"></path>
+                    <circle cx="12" cy="7" r="4"></circle>
+                  </svg>
+                </span>
+
+                <input
+                  id="username"
+                  name="username"
+                  type="text"
+                  placeholder="Nhập tên đăng nhập"
+                  autocomplete="username"
+                  required
+                />
+              </div>
+            </div>
+
+            <div class="form-group">
+              <div class="form-group__header">
+                <label for="password">Mật khẩu</label>
+
+                <span class="forgot-password">Liên hệ quản trị viên nếu quên mật khẩu</span>
+              </div>
+
+              <div class="form-control">
+                <span class="form-control__icon">
+                  <svg viewBox="0 0 24 24" aria-hidden="true">
+                    <rect x="4" y="10" width="16" height="11" rx="2"></rect>
+                    <path d="M8 10V7a4 4 0 0 1 8 0v3"></path>
+                  </svg>
+                </span>
+
+                <input
+                  id="password"
+                  name="password"
+                  type="password"
+                  placeholder="Nhập mật khẩu"
+                  autocomplete="current-password"
+                  required
+                />
+
+                <button
+                  id="toggle-password"
+                  class="password-toggle"
+                  type="button"
+                  aria-label="Hiện mật khẩu"
+                >
+                  <svg class="eye-icon" viewBox="0 0 24 24" aria-hidden="true">
+                    <path
+                      d="M2 12s3.5-6 10-6 10 6 10 6-3.5 6-10 6S2 12 2 12z"
+                    ></path>
+                    <circle cx="12" cy="12" r="3"></circle>
+                  </svg>
+                </button>
+              </div>
+            </div>
+
+            <div class="login-options">
+              <label class="remember-me">
+                <input id="remember-me" type="checkbox" />
+                <span class="remember-me__check"></span>
+                <span>Ghi nhớ đăng nhập</span>
+              </label>
+            </div>
+
+            <div id="login-error" class="login-error" hidden>
+              <svg viewBox="0 0 24 24" aria-hidden="true">
+                <circle cx="12" cy="12" r="9"></circle>
+                <path d="M12 8v5"></path>
+                <path d="M12 17h.01"></path>
+              </svg>
+
+              <span>Tên đăng nhập hoặc mật khẩu không chính xác.</span>
+            </div>
+
+            <button id="login-button" class="login-button" type="submit">
+              <span class="login-button__text">Đăng nhập</span>
+
+              <span class="login-button__loading" hidden>
+                <span class="spinner"></span>
+                Đang đăng nhập...
+              </span>
+
+              <svg
+                class="login-button__arrow"
+                viewBox="0 0 24 24"
+                aria-hidden="true"
+              >
+                <path d="M5 12h14"></path>
+                <path d="m13 6 6 6-6 6"></path>
+              </svg>
+            </button>
+          </form>
+
+          <div class="login-security">
+            <svg viewBox="0 0 24 24" aria-hidden="true">
+              <path d="M12 22s8-3 8-10V5l-8-3-8 3v7c0 7 8 10 8 10z"></path>
+              <path d="m9 12 2 2 4-4"></path>
+            </svg>
+
+            <p>
+              Đây là hệ thống nội bộ. Mọi hoạt động đăng nhập và thao tác người
+              dùng có thể được ghi nhận để đảm bảo an toàn hệ thống.
+            </p>
+          </div>
+        </div>
+
+        <footer class="login-auth__footer">
+          <span>© 2026 SC1000 Tracking System</span>
+          <span>Phiên bản 1.0.0</span>
+        </footer>
+      </section>
+    </main>
+
+    <script type="module" src="/js/login.js"></script>
+  </body>
+</html>

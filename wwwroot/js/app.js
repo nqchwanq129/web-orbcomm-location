@@ -25,6 +25,18 @@ let trackingRequest = null;
 
 renderTopbar();
 
+fetch("/api/auth/me").then(async (response) => {
+  if (!response.ok) return;
+  const user = await response.json();
+  document.querySelector(".topbar__profile-name").textContent = user.username || "Tài khoản";
+  document.querySelector(".topbar__avatar").textContent = (user.username || "T").charAt(0).toUpperCase();
+}).catch(() => {});
+
+document.querySelector(".topbar__profile").addEventListener("click", async () => {
+  const response = await fetch("/api/auth/logout", { method: "POST" });
+  if (response.ok) window.location.replace("/login.html");
+});
+
 const navigationItems = document.querySelectorAll(".topbar__nav-item");
 
 /* PAGE */

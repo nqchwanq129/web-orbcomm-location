@@ -1,6 +1,7 @@
 // Controllers/DevicesController.cs
 
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Authorization;
 using WebsitesOrbcommLocations.Models;
 using WebsitesOrbcommLocations.Repositories;
 using WebsitesOrbcommLocations.Services.Ogws;
@@ -8,6 +9,7 @@ using WebsitesOrbcommLocations.Services.Ogws;
 namespace WebsitesOrbcommLocations.Controllers;
 
 [ApiController]
+[Authorize]
 [Route("api/devices")]
 
 public sealed class DevicesController : ControllerBase
