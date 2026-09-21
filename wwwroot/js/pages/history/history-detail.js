@@ -1,6 +1,6 @@
 // wwwroot/js/pages/history/history-detail.js
-import { getDeviceHistoryDetail } from "../../api.js?v=2";
-import { formatDate } from "../../popup.js";
+import { getDeviceHistoryDetail } from "../../api.js";
+import { formatDate } from "../../date-format.js";
 import {
   escapeHtml,
   formatAcceleration,

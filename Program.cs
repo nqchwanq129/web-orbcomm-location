@@ -9,10 +9,10 @@ using WebsitesOrbcommLocations.Services.Ogws;
 
 var builder = WebApplication.CreateBuilder(args);
 
-// Reuse the local GIS OGWS settings during development when this app has none.
+// Local development secrets can live in appsettings.Development.local.json.
 // In deployment, provide Ogws__ServerUrl, Ogws__AccessId and Ogws__Password.
 if (builder.Environment.IsDevelopment() && !builder.Configuration.GetSection("Ogws").Exists())
-    builder.Configuration.AddJsonFile("GIS/appsettings.json", optional: true);
+    builder.Configuration.AddJsonFile("appsettings.Development.local.json", optional: true);
 
 // Add services to the container.
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
@@ -63,7 +63,14 @@ app.Use(async (context, next) =>
     }
     await next();
 });
-app.UseStaticFiles();
+app.UseStaticFiles(new StaticFileOptions
+{
+    OnPrepareResponse = context =>
+    {
+        if (context.File.Name.EndsWith(".js", StringComparison.OrdinalIgnoreCase))
+            context.Context.Response.Headers.CacheControl = "no-cache";
+    }
+});
 app.MapControllers();
 
 foreach (var page in new[] { "tracking", "devices", "history", "journey" })

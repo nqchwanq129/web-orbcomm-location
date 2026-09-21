@@ -1,13 +1,13 @@
 // wwwroot/js/pages/devices/devices.js
 
-import { getDevices } from "../../api.js?v=2";
-import { renderDeviceDetailPage } from "./device-detail.js?v=3";
+import { getDevices } from "../../api.js";
+import { renderDeviceDetailPage } from "./device-detail.js";
 import {
   renderDevicesTable,
   renderEmptyRow,
   renderLoadingRow,
-} from "./devices-table.js?v=2";
-import { formatUpdateTime } from "./devices-formatters.js?v=2";
+} from "./devices-table.js";
+import { formatUpdateTime } from "./devices-formatters.js";
 
 let devicesData = [];
 let filteredDevices = [];

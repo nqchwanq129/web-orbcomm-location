@@ -1,13 +1,13 @@
-import { renderTopbar } from "./topbar.js?v=3";
-import { initializeNotifications } from "./notifications.js?v=1";
-import { renderTrackingPage, updateTrackingDevices, openTrackingDevicePanel, setTrackingConnectionStatus } from "./pages/tracking/tracking.js?v=1";
-import { renderDevicesPage, initializeDevicesPage } from "./pages/devices/devices.js?v=3";
+import { renderTopbar } from "./topbar.js";
+import { initializeNotifications } from "./notifications.js";
+import { renderTrackingPage, updateTrackingDevices, openTrackingDevicePanel, setTrackingConnectionStatus } from "./pages/tracking/tracking.js";
+import { renderDevicesPage, initializeDevicesPage } from "./pages/devices/devices.js";
 import {
   renderHistoryPage,
   initializeHistoryPage,
-} from "./pages/history/history.js?v=2";
-import { getDevices } from "./api.js?v=3";
-import { renderJourneyPage, initializeJourneyPage, destroyJourneyPage } from "./pages/journey/journey.js?v=1";
+} from "./pages/history/history.js";
+import { getDevices } from "./api.js";
+import { renderJourneyPage, initializeJourneyPage, destroyJourneyPage } from "./pages/journey/journey.js";
 import {
   initializeMap,
   destroyMap,
@@ -15,7 +15,7 @@ import {
   focusDevice,
   fitAllDevices,
   resizeMap,
-} from "./map.js?v=2";
+} from "./pages/tracking/tracking-map.js";
 
 
 

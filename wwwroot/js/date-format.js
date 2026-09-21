@@ -1,5 +1,3 @@
-// wwwroot/js/popup.js
-
 export function formatDate(utcDate) {
   if (!utcDate) {
     return "Chưa có";

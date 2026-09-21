@@ -1,5 +1,5 @@
 // wwwroot/js/pages/history/history.js
-import { getDeviceHistory } from "../../api.js?v=2";
+import { getDeviceHistory } from "../../api.js";
 import {
   getHistoryFilters,
   initializeDeviceSelect,

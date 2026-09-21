@@ -1,4 +1,4 @@
-import { getDevices } from "./api.js?v=3";
+import { getDevices } from "./api.js";
 
 const refreshMs = 30000;
 

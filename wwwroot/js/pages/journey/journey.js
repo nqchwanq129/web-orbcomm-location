@@ -1,11 +1,9 @@
+import { distanceKm, findStops, validPosition } from "./journey-data.js";
+import { clearJourneyMarker, destroyJourneyMap, focusJourneyPoint, renderJourneyMap } from "./journey-map.js";
 import { getDevices, getDeviceHistory } from "../../api.js";
 
 const GAP_MS = 30 * 60 * 1000;
-const STOP_MS = 10 * 60 * 1000;
-const STOP_RADIUS_KM = 0.15;
 const formatter = new Intl.DateTimeFormat("vi-VN", { day: "2-digit", month: "2-digit", hour: "2-digit", minute: "2-digit" });
-let map;
-let marker;
 let request;
 let points = [];
 let selected = -1;
@@ -76,10 +74,7 @@ export async function initializeJourneyPage({ mobileId = "" } = {}) {
 export function destroyJourneyPage() {
   request?.abort();
   request = null;
-  marker?.remove();
-  marker = null;
-  map?.remove();
-  map = null;
+  destroyJourneyMap();
   points = [];
   stops = [];
   selected = -1;
@@ -116,8 +111,7 @@ async function loadJourney() {
 }
 
 function renderJourney(total) {
-  marker?.remove();
-  marker = null;
+  clearJourneyMarker();
   const gaps = [];
   const lines = [];
   let segment = [];
@@ -139,7 +133,7 @@ function renderJourney(total) {
   document.getElementById("journey-distance").textContent = `${distance.toFixed(1)} km`;
   const excluded = total - points.length;
   setStatus(points.length ? `${total} bản tin; ${excluded} bản tin không có vị trí tin cậy đã được bỏ qua.` : "Không có vị trí tin cậy trong khoảng thời gian này.");
-  renderMap(lines);
+  renderJourneyMap(lines, points, setStatus);
   renderEvents(gaps);
   const slider = document.getElementById("journey-slider");
   slider.disabled = !points.length;
@@ -148,31 +142,6 @@ function renderJourney(total) {
   document.getElementById("journey-end").textContent = points.length ? formatTime(points.at(-1).messageUtc) : "—";
   if (points.length) selectPoint(points.length - 1, false);
   else document.getElementById("journey-current").textContent = "Chưa có vị trí";
-}
-
-function renderMap(lines) {
-  if (!window.maplibregl) return setStatus("Không tải được thư viện bản đồ.", true);
-  if (!map) {
-    map = new window.maplibregl.Map({ container: "journey-map", style: { version: 8, sources: { osm: { type: "raster", tiles: ["https://tile.openstreetmap.org/{z}/{x}/{y}.png"], tileSize: 256, attribution: "© OpenStreetMap contributors" } }, layers: [{ id: "osm", type: "raster", source: "osm" }] }, center: [108.2, 16.1], zoom: 5 });
-    map.addControl(new window.maplibregl.NavigationControl(), "top-right");
-  }
-  const currentMap = map;
-  const update = () => {
-    if (map !== currentMap) return;
-    const geojson = { type: "FeatureCollection", features: lines.map(coordinates => ({ type: "Feature", geometry: { type: "LineString", coordinates }, properties: {} })) };
-    if (currentMap.getSource("journey-route")) currentMap.getSource("journey-route").setData(geojson);
-    else {
-      currentMap.addSource("journey-route", { type: "geojson", data: geojson });
-      currentMap.addLayer({ id: "journey-route-line", type: "line", source: "journey-route", paint: { "line-color": "#ea8b24", "line-width": 4, "line-opacity": 0.9 } });
-    }
-    if (points.length === 1) currentMap.flyTo({ center: [Number(points[0].longitude), Number(points[0].latitude)], zoom: 12 });
-    if (points.length > 1) {
-      const bounds = new window.maplibregl.LngLatBounds();
-      points.forEach(point => bounds.extend([Number(point.longitude), Number(point.latitude)]));
-      currentMap.fitBounds(bounds, { padding: 55, maxZoom: 14, duration: 0 });
-    }
-  };
-  if (currentMap.isStyleLoaded()) update(); else currentMap.once("load", update);
 }
 
 function renderEvents(gaps) {
@@ -208,40 +177,7 @@ function selectPoint(index, fly = true) {
   document.getElementById("journey-slider").value = String(index);
   document.getElementById("journey-current").textContent = `${formatTime(point.messageUtc)} · ${coordinate(point)}${point.speedKmh == null ? "" : ` · ${Number(point.speedKmh).toFixed(1)} km/h`}`;
   document.querySelectorAll(".journey-event").forEach(item => item.classList.toggle("is-selected", Number(item.dataset.index) === index));
-  if (map) {
-    const position = [Number(point.longitude), Number(point.latitude)];
-    if (!marker) marker = new window.maplibregl.Marker({ color: "#233767" }).setLngLat(position).addTo(map);
-    else marker.setLngLat(position);
-    if (fly) map.flyTo({ center: position, zoom: Math.max(map.getZoom(), 12) });
-  }
-}
-
-function findStops(data) {
-  const result = [];
-  let start = 0;
-  for (let i = 1; i <= data.length; i++) {
-    const continues = i < data.length && Date.parse(data[i].messageUtc) - Date.parse(data[i - 1].messageUtc) <= GAP_MS
-      && distanceKm(data[start], data[i]) <= STOP_RADIUS_KM;
-    if (continues) continue;
-    const end = i - 1;
-    if (end > start && Date.parse(data[end].messageUtc) - Date.parse(data[start].messageUtc) >= STOP_MS) result.push({ start, end });
-    start = i;
-  }
-  return result;
-}
-
-function validPosition(item) {
-  return item.latitude !== null && item.longitude !== null && item.latitude !== "" && item.longitude !== ""
-    && Number.isFinite(Number(item.latitude)) && Math.abs(Number(item.latitude)) <= 90
-    && Number.isFinite(Number(item.longitude)) && Math.abs(Number(item.longitude)) <= 180;
-}
-
-function distanceKm(a, b) {
-  const rad = Math.PI / 180;
-  const dLat = (Number(b.latitude) - Number(a.latitude)) * rad;
-  const dLon = (Number(b.longitude) - Number(a.longitude)) * rad;
-  const x = Math.sin(dLat / 2) ** 2 + Math.cos(Number(a.latitude) * rad) * Math.cos(Number(b.latitude) * rad) * Math.sin(dLon / 2) ** 2;
-  return 12742 * Math.asin(Math.min(1, Math.sqrt(x)));
+  focusJourneyPoint(point, fly);
 }
 
 function formatTime(value) { return formatter.format(new Date(value)); }

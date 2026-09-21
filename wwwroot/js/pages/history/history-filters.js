@@ -1,4 +1,4 @@
-import { getDevices } from "../../api.js?v=2";
+import { getDevices } from "../../api.js";
 
 export function initializeMessageTypeSelect() {
   const select = document.getElementById("history-type");

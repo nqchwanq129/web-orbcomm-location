@@ -50,11 +50,11 @@ window.maplibregl = {
   },
 };
 try {
-  const tracking = await import('/wwwroot/js/pages/tracking/tracking.js?v=1');
+  const tracking = await import('/wwwroot/js/pages/tracking/tracking.js');
   tracking.renderTrackingPage();
   tracking.setTrackingConnectionStatus('Initial request failed', true);
   assert(document.getElementById('device-list').textContent.includes('Không tải được'), 'Initial failure replaces loading placeholder');
-  await import('/wwwroot/js/app.js?v=17');
+  await import('/wwwroot/js/app.js');
   await tick();
   assert(document.querySelectorAll('.tracking-device-card').length === 1, 'Only styled DB device cards render');
   document.querySelector('.tracking-device-card').click();

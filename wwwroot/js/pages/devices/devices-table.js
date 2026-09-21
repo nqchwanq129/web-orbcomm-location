@@ -6,7 +6,7 @@ import {
   formatUpdateTime,
   localDateFormatter,
   parseReportTime,
-} from "./devices-formatters.js?v=2";
+} from "./devices-formatters.js";
 
 // Hiển thị bảng thiết bị
 export function renderDevicesTable({

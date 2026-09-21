@@ -12,7 +12,7 @@ import {
   getMotionText,
   localDateFormatter,
   parseReportTime,
-} from "./devices-formatters.js?v=2";
+} from "./devices-formatters.js";
 
 let deviceDetailMap = null;
 
