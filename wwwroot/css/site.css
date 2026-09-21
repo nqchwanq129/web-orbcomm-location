@@ -1,8 +1,21 @@
 /* wwwroot/css/site.css */
+/* Vishipel-inspired palette: light surfaces, navy structure, orange accents.
+   Green / yellow / red are reserved for semantic status. */
 :root {
+  --brand-navy: #282262;
+  --brand-navy-dark: #1d184b;
+  --brand-navy-soft: #f0eff6;
+  --brand-border: #dcd9e9;
+  --brand-orange: #f45721;
+  --brand-orange-soft: #fff1ea;
+  --brand-orange-ink: #a9360d;
+  --surface-muted: #f7f8fa;
+  --status-warning: #eab308;
+  --status-warning-ink: #854d0e;
+  --status-warning-soft: #fefce8;
   font-family: Inter, "Segoe UI", sans-serif;
-  color: #172033;
-  background: #eef2f7;
+  color: var(--brand-navy);
+  background: var(--surface-muted);
 }
 
 * {
@@ -61,7 +74,7 @@ body {
 
 .eyebrow {
   margin: 0 0 5px;
-  color: #2563eb;
+  color: var(--brand-navy);
   font-size: 0.75rem;
   font-weight: 800;
   letter-spacing: 0.13em;
@@ -90,11 +103,11 @@ h2 {
   gap: 8px;
   padding: 14px;
   border-radius: 10px;
-  background: #eff6ff;
+  background: var(--brand-navy-soft);
 }
 
 .device-summary strong {
-  color: #1d4ed8;
+  color: var(--brand-navy-dark);
   font-size: 1.6rem;
 }
 .device-summary span {
@@ -121,7 +134,7 @@ h2 {
 
 .device-list button:hover {
   border-color: #60a5fa;
-  background: #f8fbff;
+  background: var(--surface-muted);
 }
 .device-list small {
   display: block;
@@ -166,4 +179,9 @@ h2 {
   h2 {
     margin-top: 18px;
   }
+}
+
+:where(button, a, input, select):focus-visible {
+  outline: 2px solid var(--brand-orange);
+  outline-offset: 3px;
 }

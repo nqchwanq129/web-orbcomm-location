@@ -4,7 +4,7 @@
   height: 100%;
   padding: 26px;
   overflow: auto;
-  background: #f5f8fc;
+  background: var(--surface-muted);
 }
 
 /* HEADER */
@@ -24,7 +24,7 @@
 
 .history-page__title {
   margin: 0;
-  color: #172033;
+  color: var(--brand-navy);
   font-size: 1.45rem;
   font-weight: 750;
   line-height: 1.25;
@@ -53,7 +53,7 @@
 
 .history-card__header h2 {
   margin: 0;
-  color: #172033;
+  color: var(--brand-navy);
   font-size: 1rem;
   font-weight: 700;
 }
@@ -91,7 +91,7 @@
 
 .history-summary__item strong {
   overflow: hidden;
-  color: #172033;
+  color: var(--brand-navy);
   font-size: 0.78rem;
   font-weight: 700;
   text-overflow: ellipsis;

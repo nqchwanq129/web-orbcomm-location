@@ -1,17 +1,17 @@
 .tracking-page {
   --tracking-border: #e4eaf2;
   --tracking-border-strong: #d7e0eb;
-  --tracking-text: #182230;
+  --tracking-text: var(--brand-navy);
   --tracking-text-secondary: #475467;
   --tracking-text-muted: #667085;
-  --tracking-blue: #2563eb;
-  --tracking-blue-dark: #1d4ed8;
-  --tracking-blue-soft: #eff6ff;
+  --tracking-blue: var(--brand-navy);
+  --tracking-blue-dark: var(--brand-navy-dark);
+  --tracking-blue-soft: var(--brand-navy-soft);
   --tracking-green: #16a34a;
   --tracking-green-soft: #ecfdf3;
   --tracking-red: #dc2626;
   --tracking-red-soft: #fef2f2;
-  --tracking-orange: #f59e0b;
+  --tracking-warning: var(--status-warning);
   --tracking-bg: #f8fafc;
   position: relative;
   display: grid;
@@ -150,7 +150,7 @@
 }
 
 .tracking-status-dot--stale {
-  background: var(--tracking-orange);
+  background: var(--tracking-warning);
 }
 
 .tracking-status-dot--alert {
@@ -192,8 +192,8 @@
 
 .tracking-sidebar__search input:focus {
   background: #fff;
-  border-color: #93b4f9;
-  box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.08);
+  border-color: var(--brand-navy);
+  box-shadow: 0 0 0 3px rgba(40, 34, 98, 0.08);
 }
 
 .tracking-sidebar__search input::placeholder {
@@ -256,8 +256,8 @@
 }
 
 .tracking-sidebar__filter--active {
-  color: var(--tracking-blue);
-  background: #fff;
+  color: #fff;
+  background: var(--brand-navy);
   box-shadow: 0 1px 3px rgba(16, 24, 40, 0.08);
 }
 
@@ -326,14 +326,15 @@
 }
 
 .tracking-device-card--active {
-  background: #f8fbff;
-  border-color: #8eb5ff;
-  box-shadow: 0 0 0 2px rgba(37, 99, 235, 0.06);
+  background: var(--brand-orange-soft);
+  border-color: var(--brand-orange);
+  box-shadow: 0 0 0 2px rgba(40, 34, 98, 0.06);
 }
 
 .tracking-device-card--stale {
-  background: #fffbeb;
-  border-color: #fde68a;
+  background: #fff;
+  border-color: var(--tracking-border);
+  border-left: 3px solid var(--status-warning);
 }
 
 .tracking-status-dot--unknown {
@@ -374,7 +375,7 @@
 
 .tracking-device-card__identity strong {
   overflow: hidden;
-  color: #172033;
+  color: var(--brand-navy);
   font-size: 13px;
   text-overflow: ellipsis;
   white-space: nowrap;
@@ -498,18 +499,18 @@
   width: 100%;
   height: 42px;
   gap: 8px;
-  color: var(--tracking-blue-dark);
+  color: var(--brand-navy-dark);
   font: inherit;
   font-size: 12px;
   font-weight: 700;
-  background: #eff6ff;
-  border: 1px solid #bfd5ff;
+  background: var(--brand-orange);
+  border: 1px solid var(--brand-orange);
   border-radius: 9px;
   cursor: pointer;
 }
 
 .tracking-fit-all:hover {
-  background: #e3efff;
+  background: #ff713f;
 }
 
 .tracking-fit-all svg {
@@ -702,7 +703,7 @@
 }
 
 .tracking-detail-close:hover {
-  color: #172033;
+  color: var(--brand-navy);
   background: #f1f5f9;
 }
 
@@ -793,7 +794,7 @@
   padding: 0;
   color: var(--tracking-blue);
   background: var(--tracking-blue-soft);
-  border: 1px solid #d7e7ff;
+  border: 1px solid var(--brand-border);
   border-radius: 8px;
   cursor: pointer;
 }
@@ -885,8 +886,8 @@
   flex: 0 0 auto;
   width: 33px;
   height: 33px;
-  color: #5175ae;
-  background: #edf4ff;
+  color: var(--brand-navy);
+  background: var(--brand-navy-soft);
   border-radius: 8px;
 }
 
@@ -928,10 +929,10 @@
 
 .tracking-alert-badge {
   padding: 4px 7px;
-  color: #b42318;
+  color: var(--tracking-text-secondary);
   font-size: 9px;
   font-weight: 700;
-  background: #fee4e2;
+  background: #f2f4f7;
   border-radius: 20px;
 }
 
@@ -1002,12 +1003,12 @@
   max-width: 145px;
   padding: 4px 7px;
   overflow: hidden;
-  color: #175cd3;
+  color: var(--brand-navy);
   font-family: monospace;
   font-size: 9px;
   text-overflow: ellipsis;
   white-space: nowrap;
-  background: #eff8ff;
+  background: var(--brand-navy-soft);
   border-radius: 5px;
 }
 
@@ -1096,13 +1097,13 @@
 }
 
 .tracking-action--primary {
-  color: #175cd3;
-  background: #f5f9ff;
-  border-color: #cfe0ff;
+  color: var(--brand-navy);
+  background: var(--brand-navy-soft);
+  border-color: var(--brand-border);
 }
 
 .tracking-action--primary svg {
-  stroke: #2563eb;
+  stroke: var(--brand-navy);
 }
 
 .tracking-action--danger {
@@ -1349,4 +1350,30 @@
   .tracking-map-status {
     display: none;
   }
+}
+
+/* Brand accents remain distinct from GPS and motion status colors. */
+.tracking-sidebar__header {
+  border-top: 3px solid var(--brand-orange);
+}
+
+.tracking-detail-header {
+  background: var(--brand-navy-soft);
+  border-top: 3px solid var(--brand-orange);
+}
+
+.tracking-device-card--active,
+.tracking-device-card--active.tracking-device-card--stale {
+  background: var(--brand-orange-soft);
+  border-color: var(--brand-orange);
+}
+
+.tracking-alert-badge--stale {
+  color: var(--status-warning-ink);
+  background: var(--status-warning-soft);
+}
+
+.tracking-auto-refresh input:focus-visible + .tracking-auto-refresh__check {
+  outline: 2px solid var(--brand-orange);
+  outline-offset: 3px;
 }

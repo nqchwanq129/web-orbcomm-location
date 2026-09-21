@@ -4,7 +4,7 @@
   height: 100%;
   padding: 26px;
   overflow: auto;
-  background: #f5f8fc;
+  background: var(--surface-muted);
 }
 
 /* HEADER */
@@ -28,7 +28,7 @@
 
 .devices-page__title {
   margin: 0;
-  color: #172033;
+  color: var(--brand-navy);
   font-size: 1.45rem;
   font-weight: 750;
   line-height: 1.25;
@@ -56,7 +56,7 @@
 
 .devices-card__header h2 {
   margin: 0;
-  color: #172033;
+  color: var(--brand-navy);
   font-size: 1rem;
   font-weight: 700;
   line-height: 1.4;
@@ -98,9 +98,9 @@
 }
 
 .devices-search:focus-within {
-  border-color: #8bb6f7;
+  border-color: var(--brand-navy);
   background: #ffffff;
-  box-shadow: 0 0 0 3px rgb(37 99 235 / 8%);
+  box-shadow: 0 0 0 3px rgb(40 34 98 / 8%);
 }
 
 .devices-search svg {
@@ -121,7 +121,7 @@
   border: 0;
   outline: 0;
   background: transparent;
-  color: #172033;
+  color: var(--brand-navy);
   font: inherit;
   font-size: 0.84rem;
 }
@@ -152,8 +152,8 @@
 }
 
 .devices-filter:focus {
-  border-color: #8bb6f7;
-  box-shadow: 0 0 0 3px rgb(37 99 235 / 8%);
+  border-color: var(--brand-navy);
+  box-shadow: 0 0 0 3px rgb(40 34 98 / 8%);
 }
 
 /* TABLE */
@@ -210,7 +210,7 @@
 }
 
 .devices-table tbody tr:hover {
-  background: #f8fbff;
+  background: var(--surface-muted);
 }
 
 .devices-table tbody tr:last-child td {
@@ -219,7 +219,7 @@
 
 /* DEVICE */
 .devices-table__device {
-  color: #1d4ed8;
+  color: var(--brand-navy-dark);
   font-weight: 700;
   text-decoration: none;
   cursor: pointer;
@@ -282,7 +282,7 @@
 }
 
 .devices-table__row:hover .devices-table__device {
-  color: #175cd3;
+  color: var(--brand-navy);
 }
 
 .devices-table__row:hover .devices-table__arrow {
@@ -342,7 +342,7 @@
 .devices-pagination button:hover {
   border-color: #b8cae0;
   background: #f8fafc;
-  color: #172033;
+  color: var(--brand-navy);
 }
 
 .devices-pagination button:disabled {

@@ -46,8 +46,8 @@
 
 .history-field input:focus,
 .history-field select:focus {
-  border-color: #8bb6f7;
-  box-shadow: 0 0 0 3px rgb(37 99 235 / 8%);
+  border-color: var(--brand-navy);
+  box-shadow: 0 0 0 3px rgb(40 34 98 / 8%);
 }
 
 /* DATE TIME */
@@ -63,8 +63,8 @@
 }
 
 .history-field input[type="datetime-local"]:focus {
-  border-color: #2563eb;
-  box-shadow: 0 0 0 3px rgb(37 99 235 / 12%);
+  border-color: var(--brand-navy);
+  box-shadow: 0 0 0 3px rgb(40 34 98 / 12%);
 }
 
 .history-field input[type="datetime-local"]::-webkit-calendar-picker-indicator {
@@ -73,14 +73,14 @@
   margin-left: 4px;
   padding: 6px;
   border-radius: 7px;
-  background-color: #eff6ff;
+  background-color: var(--brand-navy-soft);
   cursor: pointer;
   transition: background-color 120ms ease;
 }
 
 .history-field
   input[type="datetime-local"]::-webkit-calendar-picker-indicator:hover {
-  background-color: #dbeafe;
+  background-color: var(--brand-border);
 }
 
 /* DEVICE SELECT */
@@ -125,12 +125,12 @@
 }
 
 .history-device-input:focus-within {
-  color: #2563eb;
+  color: var(--brand-navy);
 }
 
 .history-device-input #history-device:focus {
-  border-color: #2563eb;
-  box-shadow: 0 0 0 3px rgb(37 99 235 / 12%);
+  border-color: var(--brand-navy);
+  box-shadow: 0 0 0 3px rgb(40 34 98 / 12%);
 }
 
 .history-device-help {
@@ -185,8 +185,8 @@
 .history-type-trigger:focus-visible,
 .history-type-trigger[aria-expanded="true"] {
   outline: none;
-  border-color: #2563eb;
-  box-shadow: 0 0 0 3px rgb(37 99 235 / 12%);
+  border-color: var(--brand-navy);
+  box-shadow: 0 0 0 3px rgb(40 34 98 / 12%);
 }
 
 /* OPTIONS */
@@ -217,8 +217,8 @@
 
 .history-device-options [role="option"]:hover,
 .history-device-options [aria-selected="true"] {
-  background: #eff6ff;
-  color: #1d4ed8;
+  background: var(--brand-navy-soft);
+  color: var(--brand-navy-dark);
 }
 
 .history-device-options__empty {
@@ -237,7 +237,7 @@
   padding: 0 18px;
   border: 0;
   border-radius: 10px;
-  background: #2563eb;
+  background: var(--brand-navy);
   color: #ffffff;
   font: inherit;
   font-size: 0.82rem;
@@ -250,7 +250,7 @@
 }
 
 .history-search-button:hover {
-  background: #1d4ed8;
+  background: var(--brand-navy-dark);
 }
 
 .history-search-button:active {

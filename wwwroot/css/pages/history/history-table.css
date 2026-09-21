@@ -38,7 +38,7 @@
 }
 
 .history-table tbody tr:hover {
-  background: #f8fbff;
+  background: var(--surface-muted);
 }
 
 .history-table tbody tr:last-child td {
@@ -50,7 +50,7 @@
 }
 
 .history-table__row:focus-visible {
-  outline: 2px solid #2563eb;
+  outline: 2px solid var(--brand-navy);
   outline-offset: -2px;
 }
 

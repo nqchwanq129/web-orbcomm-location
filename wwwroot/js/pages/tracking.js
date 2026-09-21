@@ -588,6 +588,7 @@ function renderTrackingAlert(device) {
   const badge = document.getElementById("tracking-alert-badge");
   badge.textContent = device.staleFix === true ? "GPS cũ" : device.staleFix === false ? "GPS mới" : "Không xác định";
   badge.classList.toggle("tracking-alert-badge--normal", device.staleFix === false);
+  badge.classList.toggle("tracking-alert-badge--stale", device.staleFix === true);
   setText("tracking-alert-content", device.staleFix === true
     ? "Bản tin sử dụng vị trí GPS cũ, có thể không phản ánh vị trí hiện tại."
     : device.staleFix === false ? "Bản tin sử dụng vị trí GPS mới." : "Chưa có thông tin về độ mới của vị trí GPS.");

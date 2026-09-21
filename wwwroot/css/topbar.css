@@ -11,9 +11,9 @@
 
   padding: 0 28px;
 
-  background: #e7f1ff;
+  background: var(--brand-navy);
 
-  border-bottom: 0;
+  border-bottom: 3px solid var(--brand-orange);
 
   z-index: 20;
 }
@@ -39,7 +39,9 @@
   width: 80px;
   height: 40px;
 
-  background: transparent;
+  padding: 5px;
+  border-radius: 6px;
+  background: #fff;
 }
 
 .topbar__logo img {
@@ -47,7 +49,7 @@
   height: 100%;
 
   object-fit: contain;
-  mix-blend-mode: multiply;
+  mix-blend-mode: normal;
 
   display: block;
 }
@@ -57,7 +59,7 @@
 }
 
 .topbar__title {
-  color: #172033;
+  color: #fff;
 
   font-size: 0.92rem;
   font-weight: 700;
@@ -70,7 +72,7 @@
 .topbar__subtitle {
   margin-top: 2px;
 
-  color: #667085;
+  color: #dcd9e9;
 
   font-size: 0.7rem;
 
@@ -100,7 +102,7 @@
   border: 0;
   background: transparent;
 
-  color: #52647b;
+  color: #dcd9e9;
   font: inherit;
   font-size: 0.95rem;
   font-weight: 650;
@@ -116,7 +118,7 @@
 }
 
 .topbar__nav-item:hover {
-  color: #173f73;
+  color: #fff;
 }
 
 .topbar__nav-item:active {
@@ -124,12 +126,12 @@
 }
 
 .topbar__nav-item:focus-visible {
-  outline: 3px solid rgb(37 99 235 / 20%);
+  outline: 3px solid var(--brand-orange);
   outline-offset: 1px;
 }
 
 .topbar__nav-item--active {
-  color: #174a87;
+  color: #fff;
   font-weight: 750;
 
   cursor: default;
@@ -144,7 +146,7 @@
   height: 3px;
 
   border-radius: 999px 999px 0 0;
-  background: #2563eb;
+  background: var(--brand-orange);
 
   content: "";
 }
@@ -188,9 +190,9 @@
 
   border-radius: 8px;
 
-  background: rgb(255 255 255 / 55%);
+  background: rgb(255 255 255 / 10%);
 
-  color: #667085;
+  color: #dcd9e9;
 
   font-size: 0.74rem;
 
@@ -231,7 +233,7 @@
 
   background: transparent;
 
-  color: #173f73;
+  color: #fff;
 
   cursor: pointer;
 
@@ -241,7 +243,7 @@
 }
 
 .topbar__icon-button:hover {
-  background: rgb(255 255 255 / 55%);
+  background: rgb(255 255 255 / 10%);
 }
 
 .topbar__icon-button:active {
@@ -265,12 +267,12 @@
 
   padding: 0 4px;
 
-  border: 2px solid #eaf3ff;
+  border: 2px solid var(--brand-navy);
   border-radius: 999px;
 
-  background: #ef4444;
+  background: var(--brand-orange);
 
-  color: #ffffff;
+  color: var(--brand-navy-dark);
 
   font-size: 0.56rem;
   font-weight: 700;
@@ -296,7 +298,7 @@
 
   background: transparent;
 
-  color: #172033;
+  color: #fff;
 
   cursor: pointer;
 
@@ -304,7 +306,7 @@
 }
 
 .topbar__profile:hover {
-  background: rgb(255 255 255 / 55%);
+  background: rgb(255 255 255 / 10%);
 }
 
 .topbar__avatar {
@@ -319,9 +321,9 @@
 
   border-radius: 50%;
 
-  background: #dcecff;
+  background: var(--brand-orange);
 
-  color: #173f73;
+  color: var(--brand-navy-dark);
 
   font-size: 0.8rem;
   font-weight: 700;
@@ -332,7 +334,7 @@
 
   overflow: hidden;
 
-  color: #1f2937;
+  color: #fff;
 
   font-size: 0.84rem;
   font-weight: 600;
@@ -349,7 +351,7 @@
 
   fill: none;
 
-  stroke: #667085;
+  stroke: #dcd9e9;
   stroke-width: 2;
 
   stroke-linecap: round;
