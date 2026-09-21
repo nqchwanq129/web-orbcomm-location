@@ -171,6 +171,7 @@
 /* ACTIONS */
 
 .topbar__actions {
+  position: relative;
   display: flex;
   align-items: center;
   justify-content: flex-end;
@@ -293,6 +294,93 @@
 .topbar__account {
   position: relative;
   flex: 0 0 auto;
+}
+
+.topbar__notification-badge[hidden],
+.topbar__notification-panel[hidden] {
+  display: none;
+}
+
+.topbar__notification-panel {
+  position: absolute;
+  z-index: 40;
+  top: calc(100% + 14px);
+  right: 50px;
+  width: min(380px, calc(100vw - 20px));
+  max-height: min(480px, calc(100vh - 110px));
+  overflow: hidden;
+  border: 1px solid var(--brand-border);
+  border-radius: 12px;
+  background: #fff;
+  box-shadow: 0 14px 36px rgb(29 24 75 / 20%);
+  color: var(--brand-navy);
+}
+
+.topbar__notification-heading {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  padding: 14px 16px;
+  border-bottom: 1px solid var(--brand-border);
+}
+
+.topbar__notification-read-all {
+  border: 0;
+  background: transparent;
+  color: var(--brand-orange-ink);
+  font: inherit;
+  font-size: 0.76rem;
+  cursor: pointer;
+}
+
+.topbar__notification-read-all:disabled {
+  opacity: 0.5;
+  cursor: default;
+}
+
+.topbar__notification-list {
+  max-height: 410px;
+  overflow-y: auto;
+}
+
+.topbar__notification-item {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  width: 100%;
+  padding: 12px 16px;
+  border: 0;
+  border-bottom: 1px solid var(--brand-border);
+  background: #fff;
+  color: var(--brand-navy);
+  font: inherit;
+  font-size: 0.82rem;
+  text-align: left;
+  cursor: pointer;
+}
+
+.topbar__notification-item:hover,
+.topbar__notification-item--unread {
+  background: var(--brand-orange-soft);
+}
+
+.topbar__notification-item span,
+.topbar__notification-empty {
+  color: #667085;
+  font-size: 0.76rem;
+}
+
+.topbar__notification-empty {
+  margin: 0;
+  padding: 20px 16px;
+}
+
+.topbar__notification-button:focus-visible,
+.topbar__notification-item:focus-visible,
+.topbar__notification-read-all:focus-visible {
+  outline: 2px solid var(--brand-orange);
+  outline-offset: -2px;
 }
 
 .topbar__profile {
@@ -470,6 +558,10 @@
 }
 
 @media (max-width: 720px) {
+  .topbar__notification-panel {
+    right: 0;
+    top: calc(100% + 8px);
+  }
   .topbar {
     grid-template-columns:
       auto

@@ -61,7 +61,7 @@ export function renderTopbar() {
 
 
       <button
-        class="topbar__icon-button"
+        class="topbar__icon-button topbar__notification-button"
         type="button"
         aria-label="Thông báo">
 
@@ -83,12 +83,18 @@ export function renderTopbar() {
 
         </svg>
 
-        <span class="topbar__notification-badge">
-          3
-        </span>
+        <span class="topbar__notification-badge" hidden></span>
 
       </button>
 
+
+      <section id="notification-panel" class="topbar__notification-panel" aria-label="Thông báo" hidden>
+        <div class="topbar__notification-heading">
+          <strong>Thông báo</strong>
+          <button class="topbar__notification-read-all" type="button">Đánh dấu đã đọc</button>
+        </div>
+        <div class="topbar__notification-list"></div>
+      </section>
 
       <div class="topbar__account">
       <button

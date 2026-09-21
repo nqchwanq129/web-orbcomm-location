@@ -1,4 +1,5 @@
 import { renderTopbar } from "./topbar.js?v=3";
+import { initializeNotifications } from "./notifications.js?v=1";
 import { renderTrackingPage, updateTrackingDevices, openTrackingDevicePanel, setTrackingConnectionStatus } from "./pages/tracking/tracking.js?v=1";
 import { renderDevicesPage, initializeDevicesPage } from "./pages/devices/devices.js?v=3";
 import {
@@ -23,6 +24,7 @@ let currentPage = null;
 let trackingInterval = null;
 let trackingSession = 0;
 let trackingRequest = null;
+let pendingNotificationDevice = null;
 
 renderTopbar();
 
@@ -59,6 +61,11 @@ fetch("/api/auth/me").then(async (response) => {
   document.querySelector(".topbar__profile-name").textContent = user.username || "Tài khoản";
   document.querySelector(".topbar__account-username").textContent = user.username || "Tài khoản";
   document.querySelector(".topbar__avatar").textContent = (user.username || "T").charAt(0).toUpperCase();
+  initializeNotifications(user.username || "account", (mobileId) => {
+    pendingNotificationDevice = mobileId;
+    if (currentPage !== "tracking") navigateTo("tracking");
+    else if (!trackingRequest) loadDevices();
+  });
 }).catch(() => {});
 
 account.querySelector(".topbar__logout").addEventListener("click", async () => {
@@ -74,6 +81,20 @@ account.querySelector(".topbar__logout").addEventListener("click", async () => {
 });
 
 const navigationItems = document.querySelectorAll(".topbar__nav-item");
+const pages = new Set(["tracking", "devices", "history", "journey"]);
+
+function pageFromPath() {
+  const page = window.location.pathname.slice(1).replace(/\/$/, "");
+  return pages.has(page) ? page : "tracking";
+}
+
+function navigateTo(page, options = {}) {
+  if (!pages.has(page)) return;
+  if (window.location.pathname !== `/${page}`) {
+    window.history.pushState(null, "", `/${page}`);
+  }
+  showPage(page, options);
+}
 
 /* PAGE */
 
@@ -118,14 +139,18 @@ function showPage(page, options = {}) {
 }
 
 document.addEventListener("device:show-history", (event) => {
-  showPage("history", { mobileId: event.detail.mobileId });
+  navigateTo("history", { mobileId: event.detail.mobileId });
 });
 
 for (const item of navigationItems) {
-  item.addEventListener("click", () => {
-    showPage(item.dataset.page);
+  item.addEventListener("click", (event) => {
+    if (event.button !== 0 || event.metaKey || event.ctrlKey || event.shiftKey || event.altKey) return;
+    event.preventDefault();
+    navigateTo(item.dataset.page);
   });
 }
+
+window.addEventListener("popstate", () => showPage(pageFromPath()));
 
 /* TRACKING */
 
@@ -167,6 +192,11 @@ async function loadDevices() {
     if (!Array.isArray(devices)) throw new Error("Dữ liệu thiết bị không hợp lệ");
     updateTrackingDevices(devices);
     renderDevices(devices);
+    if (pendingNotificationDevice) {
+      openTrackingDevicePanel(pendingNotificationDevice);
+      focusDevice(pendingNotificationDevice);
+      pendingNotificationDevice = null;
+    }
     setTrackingConnectionStatus(document.getElementById("auto-refresh")?.checked
       ? `Đã cập nhật: ${new Date().toLocaleTimeString("vi-VN")}`
       : "Đã tạm dừng tự động cập nhật");
@@ -198,4 +228,7 @@ window.addEventListener("tracking:map-resize", () => {
 
 /* START */
 
-showPage("tracking");
+if (window.location.pathname === "/" || window.location.pathname === "/index.html") {
+  window.history.replaceState(null, "", "/tracking");
+}
+showPage(pageFromPath());

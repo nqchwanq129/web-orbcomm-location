@@ -66,6 +66,13 @@ app.Use(async (context, next) =>
 app.UseStaticFiles();
 app.MapControllers();
 
+foreach (var page in new[] { "tracking", "devices", "history", "journey" })
+{
+    app.MapGet($"/{page}", () => Results.File(
+        Path.Combine(app.Environment.WebRootPath, "index.html"), "text/html"))
+        .RequireAuthorization();
+}
+
 app.MapPost("/api/auth/login", async (LoginRequest request, HttpContext context, IConfiguration configuration) =>
 {
     if (string.IsNullOrWhiteSpace(request.Username) || string.IsNullOrEmpty(request.Password))
