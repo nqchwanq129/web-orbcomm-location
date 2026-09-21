@@ -2,7 +2,7 @@
 <meta charset="utf-8">
 <!-- Run from the repository root: python -m http.server 8765
      Open http://localhost:8765/tests/tracking-smoke.html -->
-<link rel="stylesheet" href="/wwwroot/css/pages/tracking.css">
+<link rel="stylesheet" href="/wwwroot/css/pages/tracking/tracking.css">
 <link rel="stylesheet" href="/wwwroot/css/site.css">
 <div id="topbar"></div><main id="page-content" style="height:800px"></main>
 <pre id="results">RUNNING</pre>
@@ -50,7 +50,11 @@ window.maplibregl = {
   },
 };
 try {
-  await import('/wwwroot/js/app.js?v=16');
+  const tracking = await import('/wwwroot/js/pages/tracking/tracking.js?v=1');
+  tracking.renderTrackingPage();
+  tracking.setTrackingConnectionStatus('Initial request failed', true);
+  assert(document.getElementById('device-list').textContent.includes('Không tải được'), 'Initial failure replaces loading placeholder');
+  await import('/wwwroot/js/app.js?v=17');
   await tick();
   assert(document.querySelectorAll('.tracking-device-card').length === 1, 'Only styled DB device cards render');
   document.querySelector('.tracking-device-card').click();
@@ -74,6 +78,7 @@ try {
   timers[0](); await tick();
   assert(text('tracking-detail-speed') === '—' && text('tracking-detail-battery') === '—', 'Nullable telemetry refreshes selected detail');
   assert(text('tracking-detail-state-text') === 'Không xác định' && text('tracking-stale-count') === '1', 'Unknown motion and stale GPS are independent');
+  assert(document.getElementById('tracking-alert-badge').classList.contains('tracking-alert-badge--stale'), 'Stale GPS badge receives warning style');
   document.querySelector('[data-filter="stale"]').click();
   assert(document.querySelectorAll('.tracking-device-card').length === 1, 'Stale GPS filter');
   fail = true; timers[0](); await tick();

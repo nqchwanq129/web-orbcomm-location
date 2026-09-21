@@ -1,0 +1,430 @@
+/* SIDEBAR */
+.tracking-sidebar {
+  position: relative;
+  z-index: 3;
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+  height: 100%;
+  background: #fff;
+  border-top: 3px solid var(--brand-orange);
+  border-right: 1px solid var(--tracking-border);
+}
+
+/* HEADER */
+.tracking-sidebar__header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 22px 18px 14px;
+}
+
+.tracking-sidebar__eyebrow {
+  display: block;
+  margin-bottom: 4px;
+  color: #7b8aa0;
+  font-size: 11px;
+  font-weight: 700;
+  line-height: 1.2;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.tracking-sidebar__title {
+  margin: 0;
+  color: var(--tracking-text);
+  font-size: 21px;
+  font-weight: 700;
+  line-height: 1.2;
+}
+
+.tracking-sidebar__total {
+  display: flex;
+  align-items: baseline;
+  gap: 5px;
+  padding: 8px 11px;
+  border-radius: 10px;
+  background: var(--tracking-blue-soft);
+}
+
+.tracking-sidebar__total strong {
+  color: var(--tracking-blue);
+  font-size: 17px;
+}
+
+.tracking-sidebar__total span {
+  color: var(--tracking-text-muted);
+  font-size: 12px;
+}
+
+/* SUMMARY */
+.tracking-summary {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  margin: 0 18px 16px;
+  padding: 10px 4px;
+  border: 1px solid #eef2f6;
+  border-radius: 12px;
+  background: var(--tracking-bg);
+}
+
+.tracking-summary__item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 3px;
+  border-right: 1px solid var(--tracking-border);
+}
+
+.tracking-summary__item:last-child {
+  border-right: 0;
+}
+
+.tracking-summary__value {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+}
+
+.tracking-summary__value strong {
+  font-size: 15px;
+}
+
+.tracking-summary__item > span {
+  color: var(--tracking-text-muted);
+  font-size: 11px;
+}
+
+/* SEARCH */
+.tracking-sidebar__search {
+  position: relative;
+  display: flex;
+  align-items: center;
+  margin: 0 18px 12px;
+}
+
+.tracking-sidebar__search > svg {
+  position: absolute;
+  left: 14px;
+  width: 18px;
+  height: 18px;
+  fill: none;
+  stroke: #94a3b8;
+  stroke-width: 1.8;
+  pointer-events: none;
+}
+
+.tracking-sidebar__search input {
+  width: 100%;
+  height: 46px;
+  padding: 0 48px 0 43px;
+  border: 1px solid var(--tracking-border-strong);
+  border-radius: 10px;
+  outline: none;
+  background: #fbfcfe;
+  color: var(--tracking-text);
+  font: inherit;
+  font-size: 13px;
+  transition: 0.2s ease;
+}
+
+.tracking-sidebar__search input:focus {
+  border-color: var(--brand-navy);
+  background: #fff;
+  box-shadow: 0 0 0 3px rgb(40 34 98 / 8%);
+}
+
+.tracking-sidebar__search input::placeholder {
+  color: #9aa8ba;
+}
+
+/* FILTER */
+.tracking-sidebar__filters {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 3px;
+  margin: 0 18px 17px;
+  padding: 4px;
+  border-radius: 10px;
+  background: #f4f6f8;
+}
+
+.tracking-sidebar__filter {
+  height: 34px;
+  padding: 0 7px;
+  border: 0;
+  border-radius: 7px;
+  background: transparent;
+  color: #667085;
+  font: inherit;
+  font-size: 11px;
+  font-weight: 600;
+  white-space: nowrap;
+  cursor: pointer;
+}
+
+.tracking-sidebar__filter:hover {
+  color: var(--tracking-text);
+}
+
+.tracking-sidebar__filter--active {
+  background: var(--brand-navy);
+  color: #fff;
+  box-shadow: 0 1px 3px rgb(16 24 40 / 8%);
+}
+
+/* DEVICE SECTION */
+.tracking-device-section {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  min-height: 0;
+}
+
+.tracking-device-section__header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 18px 10px;
+  color: var(--tracking-text-secondary);
+  font-size: 12px;
+  font-weight: 600;
+}
+
+.tracking-device-section__count {
+  display: grid;
+  place-items: center;
+  min-width: 25px;
+  height: 25px;
+  padding: 0 8px;
+  border-radius: 20px;
+  background: #f4f6f8;
+  color: var(--tracking-text-muted);
+}
+
+/* DEVICE LIST */
+.tracking-device-list {
+  flex: 1;
+  min-height: 0;
+  margin: 0;
+  padding: 0 12px 15px 18px;
+  overflow-y: auto;
+  list-style: none;
+  scrollbar-width: thin;
+  scrollbar-color: #ccd5df transparent;
+}
+
+.tracking-device-list li {
+  margin-bottom: 9px;
+}
+
+.tracking-device-list__empty {
+  padding: 20px 12px;
+  color: #98a2b3;
+  font-size: 11px;
+  text-align: center;
+}
+
+/* DEVICE CARD */
+.tracking-device-card {
+  width: 100%;
+  padding: 13px 14px;
+  border: 1px solid var(--tracking-border);
+  border-radius: 11px;
+  background: #fff;
+  font: inherit;
+  text-align: left;
+  cursor: pointer;
+  transition:
+    border-color 0.15s ease,
+    box-shadow 0.15s ease,
+    transform 0.15s ease;
+}
+
+.tracking-device-card:hover {
+  border-color: #b9c9dd;
+  box-shadow: 0 3px 12px rgb(16 24 40 / 6%);
+  transform: translateY(-1px);
+}
+
+.tracking-device-card--active,
+.tracking-device-card--active.tracking-device-card--stale {
+  border-color: var(--brand-orange);
+  background: var(--brand-orange-soft);
+  box-shadow: 0 0 0 2px rgb(40 34 98 / 6%);
+}
+
+.tracking-device-card--stale {
+  border-color: var(--tracking-border);
+  border-left: 3px solid var(--status-warning);
+  background: #fff;
+}
+
+.tracking-device-card__header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.tracking-device-card__identity {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  min-width: 0;
+}
+
+.tracking-device-card__identity strong {
+  overflow: hidden;
+  color: var(--brand-navy);
+  font-size: 13px;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.tracking-device-card__arrow {
+  width: 16px;
+  height: 16px;
+  fill: none;
+  stroke: #9aa8ba;
+  stroke-width: 1.8;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+.tracking-device-card__status {
+  margin: 6px 0 9px 16px;
+  color: #64748b;
+  font-size: 11px;
+  font-weight: 600;
+}
+
+.tracking-device-card__status--moving {
+  color: #15803d;
+}
+
+.tracking-device-card__status--alert {
+  color: var(--tracking-red);
+}
+
+.tracking-device-card__meta {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  color: #475467;
+  font-size: 11px;
+}
+
+.tracking-device-card__meta span {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+}
+
+.tracking-device-card__meta svg {
+  width: 13px;
+  height: 13px;
+  fill: none;
+  stroke: #94a3b8;
+  stroke-width: 1.6;
+  stroke-linecap: round;
+}
+
+.tracking-device-card__location {
+  margin-top: 7px;
+  overflow: hidden;
+  color: #667085;
+  font-size: 11px;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.tracking-device-card__updated {
+  margin-top: 4px;
+  color: #98a2b3;
+  font-size: 10px;
+}
+
+/* FOOTER */
+.tracking-sidebar__footer {
+  padding: 12px 18px 18px;
+  border-top: 1px solid var(--tracking-border);
+  background: #fff;
+}
+
+.tracking-auto-refresh {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  margin-bottom: 11px;
+  color: var(--tracking-text-secondary);
+  font-size: 12px;
+  cursor: pointer;
+}
+
+.tracking-auto-refresh input {
+  position: absolute;
+  opacity: 0;
+  pointer-events: none;
+}
+
+.tracking-auto-refresh__check {
+  position: relative;
+  width: 16px;
+  height: 16px;
+  border: 1px solid #b8c4d3;
+  border-radius: 4px;
+  background: #fff;
+}
+
+.tracking-auto-refresh input:checked + .tracking-auto-refresh__check {
+  border-color: var(--tracking-blue);
+  background: var(--tracking-blue);
+}
+
+.tracking-auto-refresh input:checked + .tracking-auto-refresh__check::after {
+  position: absolute;
+  top: 2px;
+  left: 5px;
+  width: 4px;
+  height: 8px;
+  content: "";
+  border: solid #fff;
+  border-width: 0 2px 2px 0;
+  transform: rotate(45deg);
+}
+
+.tracking-auto-refresh input:focus-visible + .tracking-auto-refresh__check {
+  outline: 2px solid var(--brand-orange);
+  outline-offset: 3px;
+}
+
+.tracking-fit-all {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  width: 100%;
+  height: 42px;
+  border: 1px solid var(--brand-orange);
+  border-radius: 9px;
+  background: var(--brand-orange);
+  color: var(--brand-navy-dark);
+  font: inherit;
+  font-size: 12px;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.tracking-fit-all:hover {
+  background: #ff713f;
+}
+
+.tracking-fit-all svg {
+  width: 16px;
+  height: 16px;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 1.8;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}

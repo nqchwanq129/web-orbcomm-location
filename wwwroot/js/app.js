@@ -1,5 +1,5 @@
 import { renderTopbar } from "./topbar.js";
-import { renderTrackingPage, updateTrackingDevices, openTrackingDevicePanel, setTrackingConnectionStatus } from "./pages/tracking.js?v=2";
+import { renderTrackingPage, updateTrackingDevices, openTrackingDevicePanel, setTrackingConnectionStatus } from "./pages/tracking/tracking.js?v=1";
 import { renderDevicesPage, initializeDevicesPage } from "./pages/devices/devices.js?v=3";
 import {
   renderHistoryPage,

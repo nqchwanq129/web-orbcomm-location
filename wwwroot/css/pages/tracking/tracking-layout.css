@@ -1,0 +1,70 @@
+/* PAGE */
+.tracking-page {
+  --tracking-border: #e4eaf2;
+  --tracking-border-strong: #d7e0eb;
+  --tracking-text: var(--brand-navy);
+  --tracking-text-secondary: #475467;
+  --tracking-text-muted: #667085;
+  --tracking-blue: var(--brand-navy);
+  --tracking-blue-dark: var(--brand-navy-dark);
+  --tracking-blue-soft: var(--brand-navy-soft);
+  --tracking-green: #16a34a;
+  --tracking-green-soft: #ecfdf3;
+  --tracking-red: #dc2626;
+  --tracking-red-soft: #fef2f2;
+  --tracking-warning: var(--status-warning);
+  --tracking-bg: #f8fafc;
+  position: relative;
+  display: grid;
+  grid-template-columns: 374px minmax(420px, 1fr) 0;
+  grid-template-rows: minmax(0, 1fr);
+  width: 100%;
+  height: 100%;
+  min-width: 0;
+  min-height: 0;
+  overflow: hidden;
+  background: #fff;
+  color: var(--tracking-text);
+  transition: grid-template-columns 0.25s ease;
+}
+
+.tracking-page--detail-open {
+  grid-template-columns: 374px minmax(420px, 1fr) 380px;
+}
+
+.tracking-page *,
+.tracking-page *::before,
+.tracking-page *::after {
+  box-sizing: border-box;
+}
+
+/* STATUS DOT */
+.tracking-status-dot {
+  display: inline-block;
+  flex: 0 0 auto;
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+}
+
+.tracking-status-dot--moving {
+  background: #22c55e;
+  box-shadow: 0 0 0 3px rgb(34 197 94 / 12%);
+}
+
+.tracking-status-dot--stopped {
+  background: #94a3b8;
+}
+
+.tracking-status-dot--stale {
+  background: var(--tracking-warning);
+}
+
+.tracking-status-dot--alert {
+  background: var(--tracking-red);
+  box-shadow: 0 0 0 3px rgb(220 38 38 / 12%);
+}
+
+.tracking-status-dot--unknown {
+  background: #667085;
+}
