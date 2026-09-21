@@ -11,6 +11,7 @@ import {
   openTrackingDevicePanel,
 } from "./tracking-detail.js";
 import { renderTrackingDeviceList } from "./tracking-sidebar.js";
+import { getTrackingCommandPayload, loadTrackingCommandHistory, showMoreTrackingCommandHistory } from "./tracking-commands.js";
 
 // Khởi tạo sự kiện tracking
 export function bindTrackingUiEvents() {
@@ -19,9 +20,7 @@ export function bindTrackingUiEvents() {
   const filters = document.querySelector(".tracking-sidebar__filters");
 
   deviceList?.addEventListener("click", handleDeviceListClick);
-
   searchInput?.addEventListener("input", handleSearch);
-
   filters?.addEventListener("click", handleFilter);
 
   document
@@ -51,6 +50,14 @@ export function bindTrackingUiEvents() {
   document
     .getElementById("tracking-map-fullscreen")
     ?.addEventListener("click", toggleTrackingFullscreen);
+
+  document
+    .getElementById("tracking-command-submit")
+    ?.addEventListener("click", handleTrackingCommandSubmit);
+
+  document
+    .getElementById("tracking-command-history-more")
+    ?.addEventListener("click", showMoreTrackingCommandHistory);
 }
 
 function handleDeviceListClick(event) {
@@ -63,7 +70,6 @@ function handleDeviceListClick(event) {
 
 function handleSearch(event) {
   setTrackingSearchKeyword(event.target.value);
-
   renderTrackingDeviceList();
 }
 
@@ -161,6 +167,48 @@ async function toggleTrackingFullscreen() {
     notifyTrackingMapResize();
   } catch {
     return;
+  }
+}
+
+// Gửi lệnh thiết bị
+async function handleTrackingCommandSubmit() {
+  const payload = getTrackingCommandPayload();
+  if (!payload) return;
+  const button = document.getElementById("tracking-command-submit");
+  const result = document.getElementById("tracking-command-result");
+  if (!button || button.disabled) return;
+  button.disabled = true;
+  if (result) {
+    result.textContent = "Đang gửi lệnh...";
+    result.dataset.state = "pending";
+  }
+
+  const body = {
+    commandType: payload.command,
+    reportValue: payload.command === "requestReport" ? payload.value : null,
+    sensorIndex: payload.command === "getSensor" ? payload.value : null,
+  };
+  try {
+    const response = await fetch(`/api/devices/${encodeURIComponent(payload.mobileId)}/commands`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(body),
+    });
+    const data = await response.json();
+    if (!response.ok) throw new Error(typeof data === "string" ? data : data.message || `HTTP ${response.status}`);
+    if (result && getSelectedMobileId() === payload.mobileId) {
+      result.textContent = `${data.message}${data.commandId ? ` (Command ID: ${data.commandId})` : ""}`;
+      result.dataset.state = data.success ? "success" : "error";
+    }
+    if (getSelectedMobileId() === payload.mobileId)
+      loadTrackingCommandHistory().catch((error) => console.error("Không làm mới được lịch sử lệnh:", error));
+  } catch (error) {
+    if (result && getSelectedMobileId() === payload.mobileId) {
+      result.textContent = error.message || "Không gửi được lệnh.";
+      result.dataset.state = "error";
+    }
+  } finally {
+    button.disabled = false;
   }
 }
 

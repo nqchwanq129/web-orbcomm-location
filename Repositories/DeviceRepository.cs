@@ -225,4 +225,64 @@ public sealed class DeviceRepository : IDeviceRepository
         new { LogId = logId }
     );
 }
+
+    public async Task<IReadOnlyList<DeviceCommand>> GetDeviceCommandsAsync(string mobileId)
+    {
+        const string sql = """
+            SELECT TOP (100)
+                CommandID AS CommandId, MobileID AS MobileId, CommandType, ReportValue, SensorIndex,
+                Status, ForwardMessageID AS ForwardMessageId, ErrorID AS ErrorId, CreatedAt, SubmittedAt,
+                StatusUpdatedAt, RequestedBy
+            FROM dbo.CommandQueue
+            WHERE MobileID = @MobileId
+            ORDER BY CreatedAt DESC, CommandID DESC;
+            """;
+
+        await using var connection = new SqlConnection(_connectionString);
+        var commands = await connection.QueryAsync<DeviceCommand>(sql, new { MobileId = mobileId });
+        return commands.AsList();
+    }
+
+    public async Task<DeviceCommand> SaveDeviceCommandAsync(
+        string mobileId, string commandType, int? reportValue, int? sensorIndex,
+        string status, long? forwardMessageId, int? errorId, string requestedBy)
+    {
+        const string sql = """
+            INSERT INTO dbo.CommandQueue
+                (MobileID, CommandType, ReportValue, SensorIndex, Status,
+                 ForwardMessageID, ErrorID, CreatedAt, SubmittedAt, StatusUpdatedAt, RequestedBy)
+            OUTPUT INSERTED.CommandID
+            VALUES
+                (@MobileId, @CommandType, @ReportValue, @SensorIndex, @Status,
+                 @ForwardMessageId, @ErrorId, SYSUTCDATETIME(),
+                 CASE WHEN @Status = 'Submitted' THEN SYSUTCDATETIME() ELSE NULL END,
+                 SYSUTCDATETIME(), @RequestedBy);
+            """;
+
+        await using var connection = new SqlConnection(_connectionString);
+        var commandId = await connection.ExecuteScalarAsync<long>(sql, new
+        {
+            MobileId = mobileId, CommandType = commandType, ReportValue = reportValue,
+            SensorIndex = sensorIndex, Status = status, ForwardMessageId = forwardMessageId,
+            ErrorId = errorId, RequestedBy = requestedBy
+        });
+        return new DeviceCommand
+        {
+            CommandId = commandId, MobileId = mobileId, CommandType = commandType,
+            ReportValue = reportValue, SensorIndex = sensorIndex, Status = status,
+            ForwardMessageId = forwardMessageId, ErrorId = errorId,
+            RequestedBy = requestedBy
+        };
+    }
+
+    public async Task UpdateDeviceCommandStatusAsync(long commandId, string status, int? errorId)
+    {
+        const string sql = """
+            UPDATE dbo.CommandQueue
+            SET Status = @Status, ErrorID = @ErrorId, StatusUpdatedAt = SYSUTCDATETIME()
+            WHERE CommandID = @CommandId AND Status = 'Submitted';
+            """;
+        await using var connection = new SqlConnection(_connectionString);
+        await connection.ExecuteAsync(sql, new { CommandId = commandId, Status = status, ErrorId = errorId });
+    }
 }

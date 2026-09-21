@@ -6,6 +6,9 @@ import {
 } from "./tracking-state.js";
 import { renderTrackingDeviceList } from "./tracking-sidebar.js";
 import { formatTrackingSensor } from "./tracking-sensors.js";
+import { loadTrackingCommandHistory, renderTrackingCommands } from "./tracking-commands.js";
+
+let commandHistoryTimer = null;
 
 // Mở panel chi tiết
 export function openTrackingDevicePanel(mobileId) {
@@ -18,6 +21,12 @@ export function openTrackingDevicePanel(mobileId) {
 
   renderTrackingDeviceList();
   renderTrackingDeviceDetail(device);
+  loadTrackingCommandHistory();
+  if (commandHistoryTimer) window.clearInterval(commandHistoryTimer);
+  commandHistoryTimer = window.setInterval(() => {
+    if (document.getElementById("tracking-device-panel")?.inert === false)
+      loadTrackingCommandHistory(false);
+  }, 15000);
 
   trackingPage.classList.add("tracking-page--detail-open");
 
@@ -46,6 +55,9 @@ export function closeTrackingDevicePanel() {
 
   if (!trackingPage) return;
 
+  if (commandHistoryTimer) window.clearInterval(commandHistoryTimer);
+  commandHistoryTimer = null;
+
   setSelectedMobileId(null);
 
   trackingPage.classList.remove("tracking-page--detail-open");
@@ -65,27 +77,34 @@ export function closeTrackingDevicePanel() {
 
 // Hiển thị chi tiết thiết bị
 export function renderTrackingDeviceDetail(device) {
-  setText("tracking-detail-door", formatTrackingSensor(
-    device.doorValue, device.doorBatteryLevel, device.doorMessageUtc, "Door",
-  ));
-  setText("tracking-detail-distress", formatTrackingSensor(
-    device.distressValue, device.distressBatteryLevel, device.distressMessageUtc, "DistressButton",
-  ));
+  setText(
+    "tracking-detail-door",
+    formatTrackingSensor(
+      device.doorValue,
+      device.doorBatteryLevel,
+      device.doorMessageUtc,
+      "Door",
+    ),
+  );
+  setText(
+    "tracking-detail-distress",
+    formatTrackingSensor(
+      device.distressValue,
+      device.distressBatteryLevel,
+      device.distressMessageUtc,
+      "DistressButton",
+    ),
+  );
   setText("tracking-detail-mobile-id", device.mobileId);
   setText("tracking-detail-state-text", device.statusText);
   setText("tracking-detail-updated", device.updatedText);
   setText("tracking-detail-address", device.address);
-
   setText("tracking-detail-latitude", device.latitude?.toFixed(6) ?? "—");
-
   setText("tracking-detail-longitude", device.longitude?.toFixed(6) ?? "—");
-
   setText("tracking-detail-speed", device.speedKph);
   setText("tracking-detail-heading", device.headingText);
   setText("tracking-detail-motion", device.motionText);
-
   setText("tracking-detail-battery", device.batteryV?.toFixed(2) ?? "—");
-
   setText("tracking-message-mobile-id", device.mobileId);
   setText("tracking-message-log-id", device.logId);
   setText("tracking-message-type", device.messageType);
@@ -93,13 +112,10 @@ export function renderTrackingDeviceDetail(device) {
   setText("tracking-report-time", device.reportTime);
   setText("tracking-message-updated", device.updatedAt);
   setText("tracking-message-badge", device.messageType);
-
   setText("tracking-detail-footer-time", getTimeFromDateText(device.updatedAt));
-
   setText("tracking-report-source", device.reportSourceName || "—");
 
   const temperature = toNumberOrNull(device.internalTemperatureC);
-
   setText(
     "tracking-temperature",
     temperature === null ? "—" : `${temperature} °C`,
@@ -107,9 +123,9 @@ export function renderTrackingDeviceDetail(device) {
 
   updateTrackingDeviceState(device.status);
   renderTrackingAlert(device);
+  renderTrackingCommands(device);
 
   const locateButton = document.getElementById("tracking-detail-locate");
-
   const copyButton = document.getElementById("tracking-copy-coordinate");
 
   if (locateButton) {
@@ -176,7 +192,10 @@ function renderTrackingAlert(device) {
     "tracking-alert-badge--normal",
     device.staleFix === false,
   );
-  badge.classList.toggle("tracking-alert-badge--stale", device.staleFix === true);
+  badge.classList.toggle(
+    "tracking-alert-badge--stale",
+    device.staleFix === true,
+  );
 }
 
 function getTimeFromDateText(value) {

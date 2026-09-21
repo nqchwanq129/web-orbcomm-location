@@ -7,6 +7,12 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="GIS/**" />
+    <Content Remove="GIS/**" />
+    <None Remove="GIS/**" />
+  </ItemGroup>
+
+  <ItemGroup>
     <PackageReference Include="Dapper" Version="2.1.86" />
     <PackageReference Include="Microsoft.AspNetCore.OpenApi" Version="8.0.31" />
     <PackageReference Include="Microsoft.Data.SqlClient" Version="7.0.3" />

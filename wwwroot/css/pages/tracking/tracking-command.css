@@ -1,0 +1,289 @@
+/* Điều khiển thiết bị */
+.tracking-command-section {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.tracking-command-device {
+  max-width: 145px;
+  padding: 5px 9px;
+  border: 1px solid var(--brand-border);
+  border-radius: 7px;
+  background: var(--brand-navy-soft);
+  color: var(--brand-navy);
+  font-size: 10px;
+  font-weight: 700;
+  line-height: 1.2;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+/* Form gửi lệnh */
+.tracking-command-form {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.tracking-command-field {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.tracking-command-field[hidden] {
+  display: none;
+}
+
+.tracking-command-field label {
+  color: #475467;
+  font-size: 11px;
+  font-weight: 600;
+}
+
+.tracking-command-field select {
+  width: 100%;
+  height: 40px;
+  padding: 0 34px 0 12px;
+  border: 1px solid #d8e0ea;
+  border-radius: 8px;
+  outline: none;
+  background-color: #fff;
+  color: #344054;
+  font-family: inherit;
+  font-size: 13px;
+  font-weight: 500;
+  cursor: pointer;
+  transition:
+    border-color 0.2s ease,
+    box-shadow 0.2s ease,
+    background-color 0.2s ease;
+}
+
+.tracking-command-field select:hover {
+  border-color: #94aaca;
+}
+
+.tracking-command-field select:focus {
+  border-color: var(--brand-navy);
+  box-shadow: 0 0 0 3px rgb(40 34 98 / 12%);
+}
+
+.tracking-command-field select:disabled {
+  background: #f8fafc;
+  color: #94a3b8;
+  cursor: not-allowed;
+}
+
+/* Nút gửi lệnh */
+.tracking-command-submit {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 7px;
+  width: 100%;
+  min-height: 40px;
+  padding: 9px 14px;
+  border: 1px solid var(--brand-navy);
+  border-radius: 8px;
+  background: var(--brand-navy);
+  color: #fff;
+  font-family: inherit;
+  font-size: 13px;
+  font-weight: 700;
+  cursor: pointer;
+  transition:
+    background-color 0.2s ease,
+    border-color 0.2s ease,
+    box-shadow 0.2s ease,
+    transform 0.15s ease;
+}
+
+.tracking-command-submit svg {
+  width: 15px;
+  height: 15px;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 1.8;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+.tracking-command-submit:hover {
+  border-color: var(--brand-navy-dark);
+  background: var(--brand-navy-dark);
+}
+
+.tracking-command-submit:active {
+  transform: translateY(1px);
+}
+
+.tracking-command-submit:focus-visible {
+  outline: none;
+  box-shadow: 0 0 0 3px rgb(40 34 98 / 18%);
+}
+
+.tracking-command-submit:disabled {
+  border-color: #cbd5e1;
+  background: #cbd5e1;
+  color: #64748b;
+  cursor: not-allowed;
+  transform: none;
+}
+
+#tracking-command-result {
+  font-size: 12px;
+  line-height: 1.4;
+}
+
+#tracking-command-result:empty { display: none; }
+#tracking-command-result[data-state="success"] { color: #047857; }
+#tracking-command-result[data-state="error"] { color: #b91c1c; }
+#tracking-command-result[data-state="pending"] { color: #64748b; }
+
+/* Lịch sử lệnh */
+.tracking-command-history {
+  overflow: hidden;
+  border: 1px solid #edf1f5;
+  border-radius: 9px;
+  background: #fff;
+}
+
+.tracking-command-history__header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  min-height: 48px;
+  padding: 10px 12px;
+  border-bottom: 1px solid #edf1f5;
+  background: #fbfcfd;
+}
+
+.tracking-command-history__eyebrow {
+  display: block;
+  margin-bottom: 2px;
+  color: #7b8aa0;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.tracking-command-history__header h4 {
+  margin: 0;
+  color: var(--tracking-text);
+  font-size: 12px;
+  font-weight: 700;
+}
+
+.tracking-command-history__list {
+  display: flex;
+  flex-direction: column;
+}
+
+.tracking-command-history__empty {
+  padding: 24px 12px;
+  color: #7d8b9f;
+  font-size: 12px;
+  text-align: center;
+}
+
+/* Một dòng lịch sử */
+.tracking-command-history__item {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  gap: 10px;
+  padding: 10px 12px;
+  border-bottom: 1px solid #eef2f6;
+}
+
+.tracking-command-history__item:last-child {
+  border-bottom: 0;
+}
+
+.tracking-command-history__item:hover {
+  background: #f8fafc;
+}
+
+.tracking-command-history__content {
+  min-width: 0;
+}
+
+.tracking-command-history__command {
+  display: block;
+  margin-bottom: 4px;
+  color: #344054;
+  font-size: 12px;
+  font-weight: 700;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.tracking-command-history__meta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px 8px;
+  color: #7d8b9f;
+  font-size: 10px;
+}
+
+.tracking-command-history__status {
+  align-self: center;
+  padding: 4px 7px;
+  border-radius: 999px;
+  font-size: 10px;
+  font-weight: 700;
+  white-space: nowrap;
+}
+
+/* Trạng thái lệnh */
+.tracking-command-history__status--pending {
+  background: #fff7ed;
+  color: #c2410c;
+}
+
+.tracking-command-history__status--sent {
+  background: var(--brand-navy-soft);
+  color: var(--brand-navy);
+}
+
+.tracking-command-history__status--acknowledged {
+  background: #ecfdf5;
+  color: #047857;
+}
+
+.tracking-command-history__status--failed {
+  background: #fef2f2;
+  color: #b91c1c;
+}
+
+/* Xem toàn bộ lịch sử */
+.tracking-command-history__more {
+  width: 100%;
+  min-height: 36px;
+  border: 0;
+  border-top: 1px solid #edf1f5;
+  background: #fff;
+  color: var(--brand-navy);
+  font-family: inherit;
+  font-size: 11px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+}
+
+.tracking-command-history__more:hover {
+  background: var(--brand-navy-soft);
+}
+
+.tracking-command-history__more:focus-visible {
+  outline: 2px solid var(--brand-navy);
+  outline-offset: -2px;
+}
+
+.tracking-command-history__more[hidden] {
+  display: none;
+}

@@ -1,8 +1,14 @@
 //Program.cs
 using Microsoft.Data.SqlClient;
 using WebsitesOrbcommLocations.Repositories;
+using WebsitesOrbcommLocations.Services.Ogws;
 
 var builder = WebApplication.CreateBuilder(args);
+
+// Reuse the local GIS OGWS settings during development when this app has none.
+// In deployment, provide Ogws__ServerUrl, Ogws__AccessId and Ogws__Password.
+if (builder.Environment.IsDevelopment() && !builder.Configuration.GetSection("Ogws").Exists())
+    builder.Configuration.AddJsonFile("GIS/appsettings.json", optional: true);
 
 // Add services to the container.
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
@@ -10,6 +16,8 @@ builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 builder.Services.AddControllers();
 builder.Services.AddScoped<IDeviceRepository, DeviceRepository>();
+builder.Services.Configure<OgwsOptions>(builder.Configuration.GetSection("Ogws"));
+builder.Services.AddHttpClient<IOgwsClient, OgwsClient>();
 
 var app = builder.Build();
 

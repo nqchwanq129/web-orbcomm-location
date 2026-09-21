@@ -6,6 +6,9 @@
 # dotenv files
 .env
 
+# Local GIS reference files
+/GIS/
+
 # User-specific files
 *.rsuser
 *.suo
