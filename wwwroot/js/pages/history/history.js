@@ -6,7 +6,7 @@ import {
   initializeMessageTypeSelect,
   setDefaultDateRange,
 } from "./history-filters.js";
-import { formatRange } from "./history-formatters.js";
+import { formatRange, vietnamInputToUtc } from "./history-formatters.js";
 import { getTotalPages, renderHistoryTable } from "./history-table.js";
 
 let historyData = [];
@@ -73,12 +73,12 @@ export function renderHistoryPage() {
           </div>
 
           <div class="history-field">
-            <label for="history-from">Từ ngày giờ</label>
+            <label for="history-from">Từ ngày giờ (Việt Nam)</label>
             <input id="history-from" type="datetime-local" />
           </div>
 
           <div class="history-field">
-            <label for="history-to">Đến ngày giờ</label>
+            <label for="history-to">Đến ngày giờ (Việt Nam)</label>
             <input id="history-to" type="datetime-local" />
           </div>
 
@@ -130,7 +130,7 @@ export function renderHistoryPage() {
             <thead>
               <tr>
                 <th>Mobile ID</th>
-                <th>Thời gian</th>
+                <th>Thời gian (Việt Nam)</th>
                 <th>Loại bản tin</th>
                 <th>Tọa độ</th>
                 <th>Tốc độ</th>
@@ -220,7 +220,11 @@ async function loadHistory() {
   buttonText.textContent = "Đang tải...";
 
   try {
-    const data = await getDeviceHistory(filters);
+    const data = await getDeviceHistory({
+      ...filters,
+      from: vietnamInputToUtc(filters.from),
+      to: vietnamInputToUtc(filters.to),
+    });
 
     if (!searchButton.isConnected) return;
 

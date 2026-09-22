@@ -89,7 +89,7 @@ export function formatRange(from, to) {
 }
 
 export function formatInputDate(value) {
-  const date = new Date(value);
+  const date = new Date(`${value}+07:00`);
 
   if (Number.isNaN(date.getTime())) return "—";
 
@@ -99,7 +99,14 @@ export function formatInputDate(value) {
     year: "numeric",
     hour: "2-digit",
     minute: "2-digit",
+    timeZone: "Asia/Ho_Chi_Minh",
   }).format(date);
+}
+
+export function vietnamInputToUtc(value) {
+  if (!value) return "";
+  const date = new Date(`${value}+07:00`);
+  return Number.isNaN(date.getTime()) ? "" : date.toISOString();
 }
 
 export function escapeHtml(value) {

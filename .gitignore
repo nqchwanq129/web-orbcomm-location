@@ -10,6 +10,8 @@
 # Local GIS reference files
 /GIS/
 
+/OGWS Documents/
+
 # User-specific files
 *.rsuser
 *.suo

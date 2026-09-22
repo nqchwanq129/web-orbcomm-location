@@ -10,6 +10,10 @@
     <Compile Remove="GIS/**" />
     <Content Remove="GIS/**" />
     <None Remove="GIS/**" />
+    <Compile Remove="OGWS Documents/**" />
+    <Content Remove="OGWS Documents/**" />
+    <EmbeddedResource Remove="OGWS Documents/**" />
+    <None Remove="OGWS Documents/**" />
   </ItemGroup>
 
   <ItemGroup>

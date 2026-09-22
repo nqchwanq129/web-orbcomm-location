@@ -88,7 +88,7 @@ export function initializeNotifications(username, onSelectDevice) {
           items.push({
             id: `stale:${device.mobileId}:${device.logId}`,
             title: `Vị trí cũ · ${device.mobileId}`,
-            detail: "Bản tin mới nhất có vị trí không còn mới.",
+            detail: "Thiết bị đang báo lại tọa độ từ lần định vị trước. Bấm để xem chi tiết.",
             mobileId: device.mobileId,
             time: device.messageUtc,
           });

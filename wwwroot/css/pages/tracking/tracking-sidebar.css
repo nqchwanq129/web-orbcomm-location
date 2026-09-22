@@ -260,6 +260,14 @@
   background: #fff;
 }
 
+.tracking-device-card--distress {
+  border-left: 3px solid #dc3545;
+}
+
+.tracking-device-card--door {
+  border-left: 3px solid #fd7e14;
+}
+
 .tracking-device-card__header {
   display: flex;
   align-items: center;
@@ -304,6 +312,10 @@
 
 .tracking-device-card__status--alert {
   color: var(--tracking-red);
+}
+
+.tracking-device-card__status--door {
+  color: #c2410c;
 }
 
 .tracking-device-card__meta {
@@ -351,51 +363,27 @@
   background: #fff;
 }
 
-.tracking-auto-refresh {
+.tracking-refresh-status {
   display: flex;
   align-items: center;
   gap: 9px;
   margin-bottom: 11px;
   color: var(--tracking-text-secondary);
   font-size: 12px;
-  cursor: pointer;
 }
 
-.tracking-auto-refresh input {
-  position: absolute;
-  opacity: 0;
-  pointer-events: none;
-}
-
-.tracking-auto-refresh__check {
-  position: relative;
-  width: 16px;
-  height: 16px;
-  border: 1px solid #b8c4d3;
-  border-radius: 4px;
-  background: #fff;
-}
-
-.tracking-auto-refresh input:checked + .tracking-auto-refresh__check {
-  border-color: var(--tracking-blue);
-  background: var(--tracking-blue);
-}
-
-.tracking-auto-refresh input:checked + .tracking-auto-refresh__check::after {
-  position: absolute;
-  top: 2px;
-  left: 5px;
-  width: 4px;
+.tracking-refresh-status__dot {
+  flex: 0 0 auto;
+  width: 8px;
   height: 8px;
-  content: "";
-  border: solid #fff;
-  border-width: 0 2px 2px 0;
-  transform: rotate(45deg);
+  border-radius: 50%;
+  background: #16a34a;
+  box-shadow: 0 0 0 3px #dcfce7;
 }
 
-.tracking-auto-refresh input:focus-visible + .tracking-auto-refresh__check {
-  outline: 2px solid var(--brand-orange);
-  outline-offset: 3px;
+.tracking-refresh-status strong {
+  color: var(--tracking-blue);
+  font-variant-numeric: tabular-nums;
 }
 
 .tracking-fit-all {

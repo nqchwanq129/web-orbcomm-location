@@ -39,7 +39,9 @@ builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationSc
 builder.Services.AddAuthorization();
 builder.Services.AddScoped<IDeviceRepository, DeviceRepository>();
 builder.Services.Configure<OgwsOptions>(builder.Configuration.GetSection("Ogws"));
+builder.Services.AddSingleton<OgwsStatusRateLimit>();
 builder.Services.AddHttpClient<IOgwsClient, OgwsClient>();
+builder.Services.AddHostedService<CommandStatusWorker>();
 
 var app = builder.Build();
 

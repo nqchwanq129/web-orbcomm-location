@@ -36,7 +36,7 @@ function renderTrackingSidebar() {
       <div class="tracking-summary">
         ${renderSummaryItem("moving", "tracking-moving-count", "Di chuyển")}
         ${renderSummaryItem("stopped", "tracking-stopped-count", "Đứng yên")}
-        ${renderSummaryItem("stale", "tracking-stale-count", "GPS cũ")}
+        ${renderSummaryItem("stale", "tracking-stale-count", "Vị trí cũ")}
       </div>
 
       <div class="tracking-sidebar__search">
@@ -82,7 +82,7 @@ function renderTrackingSidebar() {
           type="button"
           data-filter="stale"
         >
-          GPS cũ
+          Vị trí cũ
         </button>
       </div>
 
@@ -104,11 +104,10 @@ function renderTrackingSidebar() {
       </div>
 
       <div class="tracking-sidebar__footer">
-        <label class="tracking-auto-refresh">
-          <input id="auto-refresh" type="checkbox" checked />
-          <span class="tracking-auto-refresh__check"></span>
-          <span>Tự động cập nhật</span>
-        </label>
+        <div class="tracking-refresh-status" aria-label="Tự động cập nhật dữ liệu mỗi 15 giây">
+          <span class="tracking-refresh-status__dot" aria-hidden="true"></span>
+          <span>Tự động cập nhật sau <strong id="tracking-refresh-countdown">15 giây</strong></span>
+        </div>
 
         <button
           id="fit-all-devices"
@@ -131,7 +130,7 @@ function renderTrackingSidebar() {
 // Hiển thị thống kê thiết bị
 function renderSummaryItem(type, id, label) {
   return `
-    <div class="tracking-summary__item">
+    <div class="tracking-summary__item"${type === "stale" ? ' title="Số thiết bị đang báo lại tọa độ từ lần định vị trước"' : ""}>
       <div class="tracking-summary__value">
         <span class="tracking-status-dot tracking-status-dot--${type}"></span>
         <strong id="${id}">0</strong>
@@ -211,6 +210,16 @@ function renderTrackingMap() {
 
         <div class="tracking-map-legend__items">
           <div>
+            <span class="tracking-status-dot tracking-status-dot--distress"></span>
+            <span>Báo nguy</span>
+          </div>
+
+          <div>
+            <span class="tracking-status-dot tracking-status-dot--door"></span>
+            <span>Cửa mở</span>
+          </div>
+
+          <div>
             <span class="tracking-status-dot tracking-status-dot--moving"></span>
             <span>Di chuyển</span>
           </div>
@@ -222,7 +231,7 @@ function renderTrackingMap() {
 
           <div>
             <span class="tracking-status-dot tracking-status-dot--stale"></span>
-            <span>Dữ liệu cũ</span>
+            <span>Vị trí cũ</span>
           </div>
 
           <div>
@@ -276,6 +285,8 @@ function renderTrackingDetailPanel() {
             ></span>
             <span id="tracking-detail-state-text">--</span>
           </span>
+
+          <span id="tracking-detail-sensor-alert" class="tracking-detail-sensor-alert" hidden></span>
 
           <span id="tracking-detail-updated">--</span>
         </div>
@@ -542,6 +553,8 @@ function renderTrackingCommandSection() {
             <h4>Lịch sử lệnh</h4>
           </div>
         </div>
+
+        <div id="tracking-command-rate-limit" class="tracking-command-history__warning" role="status" hidden></div>
 
         <div
           id="tracking-command-history-list"

@@ -243,6 +243,24 @@ public sealed class DeviceRepository : IDeviceRepository
         return commands.AsList();
     }
 
+    public async Task<IReadOnlyList<DeviceCommand>> GetPendingDeviceCommandsAsync(long afterCommandId)
+    {
+        const string sql = """
+            SELECT TOP (50)
+                CommandID AS CommandId, MobileID AS MobileId, CommandType, ReportValue, SensorIndex,
+                Status, ForwardMessageID AS ForwardMessageId, ErrorID AS ErrorId, CreatedAt, SubmittedAt,
+                StatusUpdatedAt, RequestedBy
+            FROM dbo.CommandQueue
+            WHERE Status = 'Submitted' AND ForwardMessageID IS NOT NULL
+              AND CommandID > @AfterCommandId
+            ORDER BY CommandID;
+            """;
+
+        await using var connection = new SqlConnection(_connectionString);
+        var commands = await connection.QueryAsync<DeviceCommand>(sql, new { AfterCommandId = afterCommandId });
+        return commands.AsList();
+    }
+
     public async Task<DeviceCommand> SaveDeviceCommandAsync(
         string mobileId, string commandType, int? reportValue, int? sensorIndex,
         string status, long? forwardMessageId, int? errorId, string requestedBy)

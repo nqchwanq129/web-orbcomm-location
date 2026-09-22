@@ -18,6 +18,7 @@ public interface IDeviceRepository
     Task<DeviceHistoryDetail?> GetDeviceHistoryDetailAsync(long logId);
 
     Task<IReadOnlyList<DeviceCommand>> GetDeviceCommandsAsync(string mobileId);
+    Task<IReadOnlyList<DeviceCommand>> GetPendingDeviceCommandsAsync(long afterCommandId);
 
     Task<DeviceCommand> SaveDeviceCommandAsync(
         string mobileId,

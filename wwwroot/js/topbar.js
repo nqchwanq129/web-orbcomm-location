@@ -35,18 +35,18 @@ export function renderTopbar() {
       <button
         class="topbar__nav-item"
         type="button"
-        data-page="devices">
-        Danh sách
+        data-page="journey">
+        Hành trình
       </button>
 
       <button
         class="topbar__nav-item"
         type="button"
-        data-page="history">
-        Lịch sử
+        data-page="devices">
+        Danh sách
       </button>
-      <button class="topbar__nav-item" type="button" data-page="journey">
-        Hành trình
+      <button class="topbar__nav-item" type="button" data-page="history">
+        Lịch sử
       </button>
     </nav>
 

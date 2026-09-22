@@ -122,6 +122,13 @@ export function renderTrackingDeviceDetail(device) {
   );
 
   updateTrackingDeviceState(device.status);
+  const sensorAlert = document.getElementById("tracking-detail-sensor-alert");
+  if (sensorAlert) {
+    sensorAlert.hidden = !device.alertType;
+    sensorAlert.className = `tracking-detail-sensor-alert${device.alertType ? ` tracking-detail-sensor-alert--${device.alertType}` : ""}`;
+    sensorAlert.textContent = device.alertType === "distress"
+      ? "ĐANG BÁO NGUY" : device.alertType === "door" ? "Cửa mở" : "";
+  }
   renderTrackingAlert(device);
   renderTrackingCommands(device);
 
@@ -169,11 +176,11 @@ function renderTrackingAlert(device) {
   if (!badge) return;
 
   if (device.staleFix === true) {
-    badge.textContent = "GPS cũ";
+    badge.textContent = "Vị trí cũ";
 
     setText(
       "tracking-alert-content",
-      "Bản tin sử dụng vị trí GPS cũ, có thể không phản ánh vị trí hiện tại.",
+      "Thiết bị đang báo lại tọa độ từ lần định vị trước. Vị trí này có thể không còn là vị trí hiện tại.",
     );
   } else if (device.staleFix === false) {
     badge.textContent = "GPS mới";

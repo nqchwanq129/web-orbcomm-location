@@ -22,6 +22,8 @@ import {
 let currentPage = null;
 
 let trackingInterval = null;
+const TRACKING_REFRESH_MS = 15000;
+let nextTrackingRefreshAt = 0;
 let trackingSession = 0;
 let trackingRequest = null;
 let pendingNotificationDevice = null;
@@ -82,6 +84,12 @@ account.querySelector(".topbar__logout").addEventListener("click", async () => {
 
 const navigationItems = document.querySelectorAll(".topbar__nav-item");
 const pages = new Set(["tracking", "devices", "history", "journey"]);
+const pageTitles = {
+  tracking: "Theo dõi trực tiếp",
+  journey: "Hành trình",
+  devices: "Danh sách thiết bị",
+  history: "Lịch sử hành trình",
+};
 
 function pageFromPath() {
   const page = window.location.pathname.slice(1).replace(/\/$/, "");
@@ -90,6 +98,7 @@ function pageFromPath() {
 
 function navigateTo(page, options = {}) {
   if (!pages.has(page)) return;
+  if (currentPage === page && !Object.keys(options).length) return;
   if (window.location.pathname !== `/${page}`) {
     window.history.pushState(null, "", `/${page}`);
   }
@@ -103,6 +112,7 @@ function showPage(page, options = {}) {
   destroyJourneyPage();
 
   currentPage = page;
+  document.title = `${pageTitles[page]} | ORBCOMM Tracking`;
 
   switch (page) {
     case "devices":
@@ -161,20 +171,28 @@ function startTracking() {
     setTrackingConnectionStatus(error.message, true);
     return;
   }
+  nextTrackingRefreshAt = Date.now() + TRACKING_REFRESH_MS;
+  updateTrackingCountdown();
   loadDevices();
   trackingInterval = setInterval(() => {
-    if (document.getElementById("auto-refresh")?.checked) loadDevices();
-  }, 15000);
-  document.getElementById("auto-refresh")?.addEventListener("change", (event) => {
-    if (event.target.checked) loadDevices();
-    else setTrackingConnectionStatus("Đã tạm dừng tự động cập nhật");
-  });
+    if (Date.now() >= nextTrackingRefreshAt) {
+      nextTrackingRefreshAt = Date.now() + TRACKING_REFRESH_MS;
+      loadDevices();
+    }
+    updateTrackingCountdown();
+  }, 1000);
+}
+
+function updateTrackingCountdown() {
+  const countdown = document.getElementById("tracking-refresh-countdown");
+  if (countdown) countdown.textContent = `${Math.max(0, Math.ceil((nextTrackingRefreshAt - Date.now()) / 1000))} giây`;
 }
 
 function stopTracking() {
   trackingSession++;
   clearInterval(trackingInterval);
   trackingInterval = null;
+  nextTrackingRefreshAt = 0;
   trackingRequest?.abort();
   trackingRequest = null;
   destroyMap();
@@ -197,9 +215,7 @@ async function loadDevices() {
       focusDevice(pendingNotificationDevice);
       pendingNotificationDevice = null;
     }
-    setTrackingConnectionStatus(document.getElementById("auto-refresh")?.checked
-      ? `Đã cập nhật: ${new Date().toLocaleTimeString("vi-VN")}`
-      : "Đã tạm dừng tự động cập nhật");
+    setTrackingConnectionStatus(`Đã cập nhật: ${new Date().toLocaleTimeString("vi-VN")}`);
   } catch (error) {
     if (session !== trackingSession || currentPage !== "tracking") return;
     setTrackingConnectionStatus(error.name === "AbortError"

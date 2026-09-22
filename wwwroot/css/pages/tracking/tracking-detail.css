@@ -76,6 +76,26 @@
   font-size: 10px;
 }
 
+.tracking-detail-sensor-alert {
+  padding: 5px 8px;
+  border-radius: 20px;
+  font-size: 10px;
+  font-weight: 700;
+  white-space: nowrap;
+}
+
+.tracking-detail-sensor-alert[hidden] { display: none; }
+
+.tracking-detail-sensor-alert--distress {
+  background: #fef2f2;
+  color: #b42318;
+}
+
+.tracking-detail-sensor-alert--door {
+  background: #fff7ed;
+  color: #c2410c;
+}
+
 /* CLOSE */
 .tracking-detail-close {
   display: grid;

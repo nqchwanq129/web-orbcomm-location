@@ -108,9 +108,14 @@ export function renderDevices(devices) {
     } else {
       marker.setLngLat(position);
     }
-    const color = device.staleFix === true ? "#f59e0b"
-      : device.motionState === true ? "#22c55e" : device.motionState === false ? "#94a3b8" : "#667085";
+    const markerColors = {
+      distress: "#dc3545", door: "#fd7e14", stale: "#f59e0b",
+      moving: "#22c55e", stopped: "#94a3b8", unknown: "#667085",
+    };
+    const color = markerColors[device.markerState] ?? markerColors.unknown;
     marker.getElement().querySelector('svg g[fill]')?.setAttribute("fill", color);
+    marker.getElement().setAttribute("aria-label",
+      `Chi tiết thiết bị ${device.mobileId}${device.alertType === "distress" ? ", đang báo nguy" : device.alertType === "door" ? ", cửa mở" : ""}`);
   }
   if (!hasFittedToDevices && markers.size) {
     fitAllDevices();

@@ -49,9 +49,9 @@ public class ForwardMessageStatus
     public int? ErrorID { get; set; }
 }
 
-public class GetForwardMessagesResponse : OgwsResponse
+public class GetForwardStatusesResponse : OgwsResponse
 {
-    public List<ForwardMessageStatus>? Messages { get; set; }
+    public List<ForwardMessageStatus>? Statuses { get; set; }
 }
 
 public class ErrorCodeInfo

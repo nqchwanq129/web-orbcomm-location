@@ -279,6 +279,19 @@
   background: var(--brand-navy-soft);
 }
 
+.tracking-command-history__warning {
+  margin: 10px 12px 0;
+  padding: 9px 10px;
+  border: 1px solid #fcd34d;
+  border-radius: 7px;
+  background: #fffbeb;
+  color: #92400e;
+  font-size: 12px;
+  line-height: 1.5;
+}
+
+.tracking-command-history__warning[hidden] { display: none; }
+
 .tracking-command-history__more:focus-visible {
   outline: 2px solid var(--brand-navy);
   outline-offset: -2px;

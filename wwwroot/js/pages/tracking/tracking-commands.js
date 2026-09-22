@@ -3,13 +3,30 @@
 const TRACKING_COMMANDS = {
   requestReport: {
     label: "Yêu cầu báo cáo",
-    parameterLabel: "Giá trị báo cáo",
+    parameterLabel: "Loại báo cáo cần nhận",
     options: [0, 1, 2, 3, 4, 5, 6, 7, 9],
+    optionLabels: {
+      0: "Vị trí cơ bản",
+      1: "Vị trí, tốc độ và hướng",
+      2: "Vị trí và giờ hoạt động",
+      3: "Vị trí và một cảm biến",
+      4: "Vị trí và nhiều cảm biến",
+      5: "Vị trí, cảm biến và giờ hoạt động",
+      6: "Chẩn đoán thiết bị",
+      7: "Tình trạng tín hiệu bị che khuất",
+      9: "Phát hiện va chạm",
+    },
   },
   getSensor: {
     label: "Đọc cảm biến",
-    parameterLabel: "Chỉ số cảm biến",
+    parameterLabel: "Cảm biến cần đọc",
     options: [0, 1, 2, 3],
+    optionLabels: {
+      0: "Cảm biến số 0",
+      1: "Cảm biến số 1",
+      2: "Cảm biến số 2",
+      3: "Cảm biến số 3",
+    },
   },
   resetDistressAlert: {
     label: "Xóa cảnh báo khẩn cấp",
@@ -39,6 +56,8 @@ export function renderTrackingCommands(device) {
   if (currentMobileId !== nextMobileId) {
     const result = document.getElementById("tracking-command-result");
     if (result) result.textContent = "";
+    const warning = document.getElementById("tracking-command-rate-limit");
+    if (warning) warning.hidden = true;
   }
   currentMobileId = nextMobileId;
 
@@ -64,16 +83,40 @@ export async function loadTrackingCommandHistory(resetVisible = true) {
   if (!mobileId) return;
 
   try {
-    const response = await fetch(`/api/devices/${encodeURIComponent(mobileId)}/commands`);
+    const [response, healthResult] = await Promise.all([
+      fetch(`/api/devices/${encodeURIComponent(mobileId)}/commands`),
+      fetch("/api/devices/commands/status").then((result) =>
+        result.ok ? result.json() : null,
+      ).catch(() => null),
+    ]);
     if (!response.ok) throw new Error(`HTTP ${response.status}`);
     const commands = await response.json();
     if (requestId !== historyRequestId || mobileId !== currentMobileId) return;
     commandHistory = Array.isArray(commands) ? commands : [];
+    renderCommandRateLimit(healthResult);
     renderTrackingCommandHistory();
   } catch (error) {
     if (requestId !== historyRequestId || mobileId !== currentMobileId) return;
     console.error("Không tải được lịch sử lệnh:", error);
     showHistoryMessage("Không tải được lịch sử lệnh.");
+  }
+}
+
+function renderCommandRateLimit(health) {
+  const warning = document.getElementById("tracking-command-rate-limit");
+  if (!warning) return;
+  const retryAt = health?.retryAtUtc ? new Date(health.retryAtUtc) : null;
+  const hasPending = commandHistory.some((command) => command.status === "Submitted");
+  const limited = hasPending && retryAt && retryAt.getTime() > Date.now();
+  warning.hidden = !limited;
+  if (limited) {
+    const time = new Intl.DateTimeFormat("vi-VN", {
+      hour: "2-digit", minute: "2-digit", second: "2-digit",
+      timeZone: "Asia/Ho_Chi_Minh",
+    }).format(retryAt);
+    warning.textContent = `OGWS đang giới hạn yêu cầu (429). Trạng thái lệnh có thể cập nhật chậm; server sẽ thử lại sau ${time}.`;
+  } else {
+    warning.textContent = "";
   }
 }
 
@@ -118,7 +161,10 @@ function renderTrackingCommandHistory() {
     meta.className = "tracking-command-history__meta";
     const value = command.reportValue ?? command.sensorIndex;
     const parts = [`#${command.commandId}`, formatCommandTime(command.createdAt)];
-    if (value != null) parts.push(`${type?.parameterLabel || "Giá trị"}: ${value}`);
+    if (value != null) {
+      const description = type?.optionLabels?.[value];
+      parts.push(`${type?.parameterLabel || "Giá trị"}: ${description ? `${description} (${value})` : value}`);
+    }
     meta.textContent = parts.join(" · ");
     content.append(title, meta);
 
@@ -197,7 +243,7 @@ function updateTrackingCommandParameter() {
     const option = document.createElement("option");
 
     option.value = value;
-    option.textContent = value;
+    option.textContent = `${command.optionLabels?.[value] ?? value} (${value})`;
 
     parameterSelect.appendChild(option);
   });

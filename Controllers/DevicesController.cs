@@ -16,14 +16,14 @@ public sealed class DevicesController : ControllerBase
 {
     private readonly IDeviceRepository _deviceRepository;
     private readonly IOgwsClient _ogwsClient;
-    private readonly ILogger<DevicesController> _logger;
+    private readonly OgwsStatusRateLimit _statusRateLimit;
 
 
-    public DevicesController(IDeviceRepository deviceRepository, IOgwsClient ogwsClient, ILogger<DevicesController> logger)
+    public DevicesController(IDeviceRepository deviceRepository, IOgwsClient ogwsClient, OgwsStatusRateLimit statusRateLimit)
     {
         _deviceRepository = deviceRepository;
         _ogwsClient = ogwsClient;
-        _logger = logger;
+        _statusRateLimit = statusRateLimit;
     }
 
 
@@ -68,44 +68,14 @@ public sealed class DevicesController : ControllerBase
     {
         if (string.IsNullOrWhiteSpace(mobileId)) return BadRequest();
 
-        var commands = await _deviceRepository.GetDeviceCommandsAsync(mobileId);
-        var pending = commands.Where(c => c.Status == "Submitted" && c.ForwardMessageId.HasValue).ToArray();
-        if (pending.Length > 0)
-        {
-            try
-            {
-                using var statusTimeout = CancellationTokenSource.CreateLinkedTokenSource(HttpContext.RequestAborted);
-                statusTimeout.CancelAfter(TimeSpan.FromSeconds(8));
-                var statuses = await _ogwsClient.GetForwardMessageStatusesAsync(
-                    pending.Select(c => c.ForwardMessageId!.Value), statusTimeout.Token);
-                foreach (var status in statuses)
-                {
-                    if (status.ID is not ulong id || id > long.MaxValue) continue;
-                    var command = pending.FirstOrDefault(c => c.ForwardMessageId == (long)id);
-                    if (command is null) continue;
-                    var finalStatus = status.State switch
-                    {
-                        1 => "Acknowledged",
-                        2 => "Error",
-                        3 => "Failed",
-                        4 => "Timeout",
-                        5 => "Canceled",
-                        _ => null
-                    };
-                    if (finalStatus is null) continue;
-                    await _deviceRepository.UpdateDeviceCommandStatusAsync(command.CommandId, finalStatus, status.ErrorID);
-                    command.Status = finalStatus;
-                    command.ErrorId = status.ErrorID;
-                }
-            }
-            catch (Exception ex)
-            {
-                _logger.LogWarning(ex, "Could not refresh OGWS forward statuses for {MobileId}", mobileId);
-            }
-        }
-
-        return Ok(commands);
+        return Ok(await _deviceRepository.GetDeviceCommandsAsync(mobileId));
     }
+
+    [HttpGet("commands/status")]
+    public IActionResult GetCommandStatusHealth() => Ok(new
+    {
+        retryAtUtc = _statusRateLimit.RetryAtUtc
+    });
 
     [HttpPost("{mobileId}/commands")]
     public async Task<IActionResult> SendCommand(

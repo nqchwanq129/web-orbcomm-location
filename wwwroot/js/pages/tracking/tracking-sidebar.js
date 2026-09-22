@@ -70,23 +70,28 @@ function renderTrackingDeviceCard(device) {
   const activeClass =
     device.mobileId === selectedMobileId ? " tracking-device-card--active" : "";
 
-  const staleClass =
-    device.staleFix === true ? " tracking-device-card--stale" : "";
+  const alertClass = device.alertType === "distress"
+    ? " tracking-device-card--distress"
+    : device.alertType === "door"
+      ? " tracking-device-card--door"
+      : device.staleFix === true ? " tracking-device-card--stale" : "";
 
   const statusClass =
-    device.status === "moving" ? " tracking-device-card__status--moving" : "";
+    device.alertType === "distress" ? " tracking-device-card__status--alert"
+      : device.alertType === "door" ? " tracking-device-card__status--door"
+        : device.status === "moving" ? " tracking-device-card__status--moving" : "";
 
   return `
     <li>
       <button
-        class="tracking-device-card${activeClass}${staleClass}"
+        class="tracking-device-card${activeClass}${alertClass}"
         type="button"
         data-mobile-id="${escapeHtml(device.mobileId)}">
 
         <div class="tracking-device-card__header">
           <div class="tracking-device-card__identity">
             <span
-              class="tracking-status-dot tracking-status-dot--${device.status}">
+              class="tracking-status-dot tracking-status-dot--${device.markerState}">
             </span>
 
             <strong>${escapeHtml(device.mobileId)}</strong>
@@ -102,7 +107,8 @@ function renderTrackingDeviceCard(device) {
 
         <div class="tracking-device-card__status${statusClass}">
           ${escapeHtml(device.statusText)}
-          ${device.staleFix === true ? " · GPS cũ" : ""}
+          ${device.alertType === "distress" ? " · ĐANG BÁO NGUY" : device.alertType === "door" ? " · Cửa mở" : ""}
+          ${device.staleFix === true ? " · Vị trí cũ" : ""}
         </div>
 
         <div class="tracking-device-card__meta">

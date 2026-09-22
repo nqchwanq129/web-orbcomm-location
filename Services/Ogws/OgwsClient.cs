@@ -34,15 +34,18 @@ public class OgwsClient : IOgwsClient
 
     private static readonly JsonSerializerOptions JsonOptions = new() { PropertyNamingPolicy = null, PropertyNameCaseInsensitive = true };
     private static readonly SemaphoreSlim TokenLock = new(1, 1);
+    private static readonly SemaphoreSlim StatusRequestLock = new(1, 1);
     private static string? _cachedToken;
     private static DateTime _tokenExpiresAtUtc = DateTime.MinValue;
 
     private readonly HttpClient _http;
     private readonly OgwsOptions _options;
+    private readonly OgwsStatusRateLimit _statusRateLimit;
 
-    public OgwsClient(HttpClient http, IOptions<OgwsOptions> options)
+    public OgwsClient(HttpClient http, IOptions<OgwsOptions> options, OgwsStatusRateLimit statusRateLimit)
     {
         _options = options.Value;
+        _statusRateLimit = statusRateLimit;
         if (!string.IsNullOrWhiteSpace(_options.ServerUrl))
             http.BaseAddress = new Uri($"{_options.ServerUrl.TrimEnd('/')}/api/v1.0/");
         _http = http;
@@ -100,20 +103,44 @@ public class OgwsClient : IOgwsClient
         if (_http.BaseAddress is null || string.IsNullOrWhiteSpace(_options.AccessId) || string.IsNullOrWhiteSpace(_options.Password))
             return [];
 
-        await EnsureTokenAsync(ct);
-        var url = $"get/fw_messages?IDList={string.Join(',', ids)}";
-        using var response = await SendGetAsync(url, ct);
-        if (response.StatusCode == HttpStatusCode.Unauthorized)
+        await StatusRequestLock.WaitAsync(ct);
+        try
         {
-            await RefreshTokenAsync(ct, force: true);
-            using var retry = await SendGetAsync(url, ct);
-            retry.EnsureSuccessStatusCode();
-            var retried = await retry.Content.ReadFromJsonAsync<GetForwardMessagesResponse>(JsonOptions, ct);
-            return retried?.Messages ?? [];
+            if (_statusRateLimit.RetryAtUtc is not null) return [];
+
+            await EnsureTokenAsync(ct);
+            var url = $"get/fw_statuses?IDList={string.Join(',', ids)}";
+            using var response = await SendGetAsync(url, ct);
+            if (response.StatusCode == HttpStatusCode.Unauthorized)
+            {
+                await RefreshTokenAsync(ct, force: true);
+                using var retry = await SendGetAsync(url, ct);
+                if (retry.StatusCode == HttpStatusCode.TooManyRequests)
+                    SetStatusRetryAfter(retry);
+                retry.EnsureSuccessStatusCode();
+                _statusRateLimit.Clear();
+                var retried = await retry.Content.ReadFromJsonAsync<GetForwardStatusesResponse>(JsonOptions, ct);
+                return retried?.Statuses ?? [];
+            }
+            if (response.StatusCode == HttpStatusCode.TooManyRequests)
+                SetStatusRetryAfter(response);
+            response.EnsureSuccessStatusCode();
+            _statusRateLimit.Clear();
+            var result = await response.Content.ReadFromJsonAsync<GetForwardStatusesResponse>(JsonOptions, ct);
+            return result?.Statuses ?? [];
         }
-        response.EnsureSuccessStatusCode();
-        var result = await response.Content.ReadFromJsonAsync<GetForwardMessagesResponse>(JsonOptions, ct);
-        return result?.Messages ?? [];
+        finally
+        {
+            StatusRequestLock.Release();
+        }
+    }
+
+    private void SetStatusRetryAfter(HttpResponseMessage response)
+    {
+        var now = DateTimeOffset.UtcNow;
+        var retryAfter = response.Headers.RetryAfter;
+        _statusRateLimit.PauseUntil(retryAfter?.Date
+            ?? now.Add(retryAfter?.Delta ?? TimeSpan.FromMinutes(2)));
     }
 
     private async Task<HttpResponseMessage> SendGetAsync(string url, CancellationToken ct)

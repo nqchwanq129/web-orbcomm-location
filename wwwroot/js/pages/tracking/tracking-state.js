@@ -51,6 +51,12 @@ function normalizeTrackingDevice(device) {
       : device.motionState === false
         ? "stopped"
         : "unknown";
+  const alertType = device.distressValue === 1
+    ? "distress"
+    : device.doorValue === 1
+      ? "door"
+      : null;
+  const markerState = alertType ?? (device.staleFix === true ? "stale" : status);
 
   return {
     ...device,
@@ -58,6 +64,8 @@ function normalizeTrackingDevice(device) {
     longitude,
     hasPosition,
     status,
+    alertType,
+    markerState,
     statusText: getMotionText(device.motionState),
     updatedText: updated
       ? formatUpdateTime(updated)
