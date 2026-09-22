@@ -1,4 +1,3 @@
-// wwwroot/js/pages/tracking/tracking-events.js
 import {
   getSelectedMobileId,
   getTrackingDevice,
@@ -13,7 +12,6 @@ import {
 import { renderTrackingDeviceList } from "./tracking-sidebar.js";
 import { getTrackingCommandPayload, loadTrackingCommandHistory, showMoreTrackingCommandHistory } from "./tracking-commands.js";
 
-// Khởi tạo sự kiện tracking
 export function bindTrackingUiEvents() {
   const deviceList = document.getElementById("device-list");
   const searchInput = document.getElementById("tracking-device-search");
@@ -90,7 +88,6 @@ function handleFilter(event) {
   renderTrackingDeviceList();
 }
 
-// Định vị thiết bị đang chọn
 function focusSelectedTrackingDevice() {
   const device = getTrackingDevice(getSelectedMobileId());
 
@@ -107,7 +104,6 @@ function focusSelectedTrackingDevice() {
   );
 }
 
-// Hiển thị toàn bộ thiết bị
 function requestFitAllTrackingDevices() {
   const devices = getTrackingDevices();
 
@@ -124,7 +120,6 @@ function requestFitAllTrackingDevices() {
   );
 }
 
-// Sao chép tọa độ
 async function copySelectedDeviceCoordinate() {
   const device = getTrackingDevice(getSelectedMobileId());
 
@@ -151,7 +146,6 @@ async function copySelectedDeviceCoordinate() {
   }
 }
 
-// Bật tắt toàn màn hình
 async function toggleTrackingFullscreen() {
   const mapArea = document.querySelector(".tracking-map-area");
 
@@ -170,7 +164,6 @@ async function toggleTrackingFullscreen() {
   }
 }
 
-// Gửi lệnh thiết bị
 async function handleTrackingCommandSubmit() {
   const payload = getTrackingCommandPayload();
   if (!payload) return;

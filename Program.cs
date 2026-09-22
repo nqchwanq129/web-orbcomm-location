@@ -1,24 +1,31 @@
-//Program.cs
 using Microsoft.Data.SqlClient;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Identity;
 using System.Security.Claims;
 using WebsitesOrbcommLocations.Repositories;
+using WebsitesOrbcommLocations.Services;
 using WebsitesOrbcommLocations.Services.Ogws;
 
 var builder = WebApplication.CreateBuilder(args);
 
-// Local development secrets can live in appsettings.Development.local.json.
-// In deployment, provide Ogws__ServerUrl, Ogws__AccessId and Ogws__Password.
-if (builder.Environment.IsDevelopment() && !builder.Configuration.GetSection("Ogws").Exists())
-    builder.Configuration.AddJsonFile("appsettings.Development.local.json", optional: true);
+// Cấu hình theo máy được đọc trước, biến môi trường được ưu tiên sau cùng.
+builder.Configuration.AddJsonFile("appsettings.Local.json", optional: true, reloadOnChange: true);
+if (builder.Environment.IsDevelopment())
+    builder.Configuration.AddJsonFile("appsettings.Development.local.json", optional: true, reloadOnChange: true);
+builder.Configuration.AddEnvironmentVariables();
 
-// Add services to the container.
-// Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
+if (string.IsNullOrWhiteSpace(builder.Configuration.GetConnectionString("TrackingDatabase")))
+    throw new InvalidOperationException(
+        "Missing ConnectionStrings:TrackingDatabase. Set it in appsettings.Local.json " +
+        "or the ConnectionStrings__TrackingDatabase environment variable.");
+
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
-builder.Services.AddControllers();
+builder.Services.AddControllers().AddJsonOptions(options =>
+    options.JsonSerializerOptions.Converters.Add(new UtcDateTimeJsonConverter()));
+builder.Services.ConfigureHttpJsonOptions(options =>
+    options.SerializerOptions.Converters.Add(new UtcDateTimeJsonConverter()));
 builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
     .AddCookie(options =>
     {
@@ -27,6 +34,7 @@ builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationSc
         options.Cookie.SameSite = SameSiteMode.Lax;
         options.Events.OnRedirectToLogin = context =>
         {
+            // API trả 401 để JavaScript xử lý; trang web mới chuyển tới màn hình đăng nhập.
             if (context.Request.Path.StartsWithSegments("/api"))
             {
                 context.Response.StatusCode = StatusCodes.Status401Unauthorized;
@@ -45,7 +53,6 @@ builder.Services.AddHostedService<CommandStatusWorker>();
 
 var app = builder.Build();
 
-// Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();
@@ -100,6 +107,7 @@ app.MapPost("/api/auth/login", async (LoginRequest request, HttpContext context,
     var username = reader.GetString(1);
     var hash = reader.IsDBNull(2) ? null : reader.GetString(2);
     var lockedUntil = reader.IsDBNull(3) ? (DateTimeOffset?)null : reader.GetDateTimeOffset(3);
+    // Dùng bộ xác minh của Identity vì AspNetUsers lưu mật khẩu dưới dạng hash.
     if (lockedUntil > DateTimeOffset.UtcNow || hash is null ||
         new PasswordHasher<object>().VerifyHashedPassword(new object(), hash, request.Password) == PasswordVerificationResult.Failed)
         return Results.Unauthorized();

@@ -1,6 +1,3 @@
-// wwwroot/js/pages/tracking/tracking-view.js
-
-// Hiển thị giao diện tracking
 export function renderTrackingView() {
   const pageContent = document.getElementById("page-content");
 
@@ -17,7 +14,6 @@ export function renderTrackingView() {
   return true;
 }
 
-// Hiển thị sidebar
 function renderTrackingSidebar() {
   return `
     <aside class="tracking-sidebar">
@@ -127,7 +123,6 @@ function renderTrackingSidebar() {
   `;
 }
 
-// Hiển thị thống kê thiết bị
 function renderSummaryItem(type, id, label) {
   return `
     <div class="tracking-summary__item"${type === "stale" ? ' title="Số thiết bị đang báo lại tọa độ từ lần định vị trước"' : ""}>
@@ -140,7 +135,6 @@ function renderSummaryItem(type, id, label) {
   `;
 }
 
-// Hiển thị bản đồ
 function renderTrackingMap() {
   return `
     <main class="tracking-map-area">
@@ -244,7 +238,6 @@ function renderTrackingMap() {
   `;
 }
 
-// Hiển thị panel chi tiết thiết bị
 function renderTrackingDetailPanel() {
   return `
     <aside
@@ -314,7 +307,6 @@ function renderTrackingDetailPanel() {
   `;
 }
 
-// Hiển thị vị trí thiết bị
 function renderTrackingLocationSection() {
   return `
     <section class="tracking-detail-section">
@@ -375,7 +367,6 @@ function renderTrackingLocationSection() {
   `;
 }
 
-// Hiển thị trạng thái thiết bị
 function renderTrackingStatusSection() {
   return `
     <section class="tracking-detail-section">
@@ -454,7 +445,6 @@ function renderTrackingStatusSection() {
   `;
 }
 
-// Hiển thị cảm biến
 function renderTrackingSensorSection() {
   return `
     <section class="tracking-detail-section">
@@ -481,7 +471,6 @@ function renderTrackingSensorSection() {
   `;
 }
 
-// Hiển thị điều khiển thiết bị
 function renderTrackingCommandSection() {
   return `
     <section class="tracking-detail-section tracking-command-section">
@@ -578,7 +567,6 @@ function renderTrackingCommandSection() {
   `;
 }
 
-// Hiển thị chất lượng GPS
 function renderTrackingGpsSection() {
   return `
     <section class="tracking-detail-section">
@@ -597,7 +585,6 @@ function renderTrackingGpsSection() {
   `;
 }
 
-// Hiển thị bản tin gần nhất
 function renderTrackingMessageSection() {
   return `
     <section class="tracking-detail-section">

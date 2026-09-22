@@ -2,9 +2,6 @@
 
 namespace WebsitesOrbcommLocations.Services.Ogws;
 
-/// <summary>
-/// Các DTO cần cho yêu cầu gửi lệnh SC1000 qua OGWS.
-/// </summary>
 public class CommonMessageField
 {
     public string? Name { get; set; }

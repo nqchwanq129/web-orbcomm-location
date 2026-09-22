@@ -1,12 +1,9 @@
-
-
 let map;
 
 const markers = new Map();
 
 let hasFittedToDevices = false;
 
-/* INITIALIZE MAP */
 export function initializeMap() {
   if (map) {
     return map;
@@ -48,7 +45,6 @@ export function initializeMap() {
   return map;
 }
 
-// Destroy map
 export function destroyMap() {
   for (const marker of markers.values()) {
     marker.remove();
@@ -60,8 +56,6 @@ export function destroyMap() {
   }
   hasFittedToDevices = false;
 }
-
-/* RENDER DEVICES */
 
 export function renderDevices(devices) {
   if (!map) {
@@ -134,8 +128,6 @@ export function resizeMap() {
   map?.resize();
 }
 
-/* FOCUS DEVICE */
-
 export function focusDevice(mobileId) {
   if (!map) {
     return;
@@ -152,6 +144,5 @@ export function focusDevice(mobileId) {
 
     zoom: 15,
   });
-
 
 }

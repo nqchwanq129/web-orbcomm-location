@@ -1,5 +1,3 @@
-// wwwroot/js/pages/devices/device-detail.js
-
 import { loadDeviceAddress } from "./devices-location.js";
 import {
   escapeHtml,
@@ -16,7 +14,6 @@ import {
 
 let deviceDetailMap = null;
 
-// Hiển thị chi tiết thiết bị
 export function renderDeviceDetailPage(device, onBack) {
   const pageContent = document.getElementById("page-content");
   const reportTime = parseReportTime(device.reportTimestampUtc);
@@ -98,7 +95,6 @@ export function renderDeviceDetailPage(device, onBack) {
   renderDeviceDetailMap(device);
 }
 
-// Hiển thị thông tin vị trí
 function renderLocationCard(device) {
   return `
     <div class="device-detail__card">
@@ -119,7 +115,6 @@ function renderLocationCard(device) {
   `;
 }
 
-// Hiển thị lịch sử gần đây
 function renderRecentHistory(device, reportTime) {
   return `
     <div class="device-detail__history" id="device-detail-history-section">
@@ -181,7 +176,6 @@ function renderRecentHistory(device, reportTime) {
   `;
 }
 
-// Hiển thị thông tin thiết bị
 function renderInformationCard(device, reportTime) {
   return `
     <div class="device-detail__card">
@@ -202,7 +196,6 @@ function renderInformationCard(device, reportTime) {
   `;
 }
 
-// Khởi tạo sự kiện trang chi tiết
 function initializeDeviceDetailEvents(device, onBack) {
   document
     .getElementById("device-detail-history-all")
@@ -230,7 +223,6 @@ function initializeDeviceDetailEvents(device, onBack) {
     .addEventListener("click", () => locateDevice(device));
 }
 
-// Định vị thiết bị trên bản đồ
 function locateDevice(device) {
   const latitude = Number(device.latitude);
   const longitude = Number(device.longitude);
@@ -245,7 +237,6 @@ function locateDevice(device) {
   });
 }
 
-// Hiển thị bản đồ chi tiết thiết bị
 function renderDeviceDetailMap(device) {
   const latitude = Number(device.latitude);
   const longitude = Number(device.longitude);
@@ -298,7 +289,6 @@ function renderDeviceDetailMap(device) {
     .addTo(deviceDetailMap);
 }
 
-// Hiển thị ô thống kê
 function renderDeviceStat(label, value) {
   return `
     <div class="device-detail__stat">

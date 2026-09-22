@@ -17,8 +17,6 @@ import {
   resizeMap,
 } from "./pages/tracking/tracking-map.js";
 
-
-
 let currentPage = null;
 
 let trackingInterval = null;
@@ -105,8 +103,6 @@ function navigateTo(page, options = {}) {
   showPage(page, options);
 }
 
-/* PAGE */
-
 function showPage(page, options = {}) {
   stopTracking();
   destroyJourneyPage();
@@ -162,8 +158,6 @@ for (const item of navigationItems) {
 
 window.addEventListener("popstate", () => showPage(pageFromPath()));
 
-/* TRACKING */
-
 function startTracking() {
   try {
     initializeMap();
@@ -200,6 +194,7 @@ function stopTracking() {
 
 async function loadDevices() {
   if (currentPage !== "tracking" || trackingRequest) return;
+  // Bỏ phản hồi cũ nếu người dùng đã rời trang hoặc bắt đầu phiên theo dõi khác.
   const session = trackingSession;
   const request = new AbortController();
   trackingRequest = request;
@@ -241,8 +236,6 @@ window.addEventListener("tracking:fit-all", () => {
 window.addEventListener("tracking:map-resize", () => {
   if (currentPage === "tracking") resizeMap();
 });
-
-/* START */
 
 if (window.location.pathname === "/" || window.location.pathname === "/index.html") {
   window.history.replaceState(null, "", "/tracking");

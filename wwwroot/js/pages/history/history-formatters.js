@@ -1,5 +1,3 @@
-// wwwroot/js/pages/history/history-formatters.js
-
 export function formatCoordinate(latitude, longitude) {
   const lat = Number(latitude);
   const lng = Number(longitude);
@@ -105,6 +103,7 @@ export function formatInputDate(value) {
 
 export function vietnamInputToUtc(value) {
   if (!value) return "";
+  // datetime-local không kèm múi giờ; người dùng nhập theo giờ Việt Nam.
   const date = new Date(`${value}+07:00`);
   return Number.isNaN(date.getTime()) ? "" : date.toISOString();
 }

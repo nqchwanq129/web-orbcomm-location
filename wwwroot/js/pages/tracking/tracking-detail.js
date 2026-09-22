@@ -1,4 +1,3 @@
-// wwwroot/js/pages/tracking/tracking-detail.js
 import {
   getTrackingDevice,
   setSelectedMobileId,
@@ -10,7 +9,6 @@ import { loadTrackingCommandHistory, renderTrackingCommands } from "./tracking-c
 
 let commandHistoryTimer = null;
 
-// Mở panel chi tiết
 export function openTrackingDevicePanel(mobileId) {
   const device = getTrackingDevice(mobileId);
   const trackingPage = document.querySelector(".tracking-page");
@@ -49,7 +47,6 @@ export function openTrackingDevicePanel(mobileId) {
   notifyTrackingMapResize();
 }
 
-// Đóng panel chi tiết
 export function closeTrackingDevicePanel() {
   const trackingPage = document.querySelector(".tracking-page");
 
@@ -75,7 +72,6 @@ export function closeTrackingDevicePanel() {
   notifyTrackingMapResize();
 }
 
-// Hiển thị chi tiết thiết bị
 export function renderTrackingDeviceDetail(device) {
   setText(
     "tracking-detail-door",
@@ -144,7 +140,6 @@ export function renderTrackingDeviceDetail(device) {
   }
 }
 
-// Cập nhật trạng thái
 function updateTrackingDeviceState(status) {
   const state = document.getElementById("tracking-detail-state");
 
@@ -169,7 +164,6 @@ function updateTrackingDeviceState(status) {
   dot.classList.add(`tracking-status-dot--${status}`);
 }
 
-// Hiển thị trạng thái GPS
 function renderTrackingAlert(device) {
   const badge = document.getElementById("tracking-alert-badge");
 

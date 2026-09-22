@@ -21,7 +21,7 @@ export function initializeNotifications(username, onSelectDevice) {
   function saveReadIds() {
     try {
       sessionStorage.setItem(storageKey, JSON.stringify([...readIds]));
-    } catch { /* Storage may be unavailable. */ }
+    } catch { /* Trình duyệt có thể chặn bộ nhớ cục bộ. */ }
   }
 
   function close() {

@@ -1,6 +1,3 @@
-/* wwwroot/css/site.css */
-/* Vishipel-inspired palette: light surfaces, navy structure, orange accents.
-   Green / yellow / red are reserved for semantic status. */
 :root {
   --brand-navy: #282262;
   --brand-navy-dark: #1d184b;
@@ -17,21 +14,17 @@
   color: var(--brand-navy);
   background: var(--surface-muted);
 }
-
 * {
   box-sizing: border-box;
 }
-
 html,
 body {
   width: 100%;
   height: 100%;
 }
-
 body {
   margin: 0;
 }
-
 .app-shell {
   display: grid;
   grid-template-rows: 84px minmax(0, 1fr);
@@ -40,21 +33,18 @@ body {
   height: 100dvh;
   overflow: hidden;
 }
-
 #topbar {
   position: relative;
   z-index: 50;
   grid-row: 1;
   min-width: 0;
 }
-
 .app-content {
   grid-row: 2;
   min-width: 0;
   min-height: 0;
   overflow: hidden;
 }
-
 .devices-page,
 .history-page,
 .alerts-page {
@@ -63,7 +53,6 @@ body {
   overflow-y: auto;
   background: #f8fafc;
 }
-
 .sidebar {
   z-index: 1;
   overflow-y: auto;
@@ -71,7 +60,6 @@ body {
   background: #fff;
   box-shadow: 2px 0 12px rgb(20 37 63 / 10%);
 }
-
 .eyebrow {
   margin: 0 0 5px;
   color: var(--brand-navy);
@@ -79,7 +67,6 @@ body {
   font-weight: 800;
   letter-spacing: 0.13em;
 }
-
 h1 {
   margin: 0;
   font-size: 1.35rem;
@@ -88,7 +75,6 @@ h2 {
   margin: 28px 0 10px;
   font-size: 0.9rem;
 }
-
 .status {
   color: #667085;
   font-size: 0.86rem;
@@ -96,7 +82,6 @@ h2 {
 .status.error {
   color: #b42318;
 }
-
 .device-summary {
   display: flex;
   align-items: baseline;
@@ -105,7 +90,6 @@ h2 {
   border-radius: 10px;
   background: var(--brand-navy-soft);
 }
-
 .device-summary strong {
   color: var(--brand-navy-dark);
   font-size: 1.6rem;
@@ -114,7 +98,6 @@ h2 {
   color: #475467;
   font-size: 0.85rem;
 }
-
 .device-list {
   margin: 0;
   padding: 0;
@@ -131,7 +114,6 @@ h2 {
   text-align: left;
   cursor: pointer;
 }
-
 .device-list button:hover {
   border-color: #60a5fa;
   background: var(--surface-muted);
@@ -141,14 +123,12 @@ h2 {
   margin-top: 4px;
   color: #667085;
 }
-
 #map {
   width: 100%;
   height: 100%;
   min-width: 0;
   min-height: 0;
 }
-
 .popup-title {
   margin: 0 0 8px;
   font-size: 1rem;
@@ -166,12 +146,10 @@ h2 {
   margin: 0;
   font-weight: 600;
 }
-
 @media (max-width: 700px) {
   .app-shell {
     grid-template-rows: auto minmax(0, 1fr);
   }
-
   .sidebar {
     max-height: 40vh;
     padding: 16px;
@@ -180,7 +158,6 @@ h2 {
     margin-top: 18px;
   }
 }
-
 :where(button, a, input, select):focus-visible {
   outline: 2px solid var(--brand-orange);
   outline-offset: 3px;

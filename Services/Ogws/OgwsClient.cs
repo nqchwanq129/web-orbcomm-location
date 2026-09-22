@@ -16,23 +16,16 @@ public class OgwsSubmitResult
 
 public interface IOgwsClient
 {
-    /// <summary>Gửi 1 lệnh SC1000 (SIN=55) trực tiếp tới thiết bị qua OGWS Gateway (submit/messages).</summary>
     Task<OgwsSubmitResult> SubmitCommandAsync(string mobileId, string commandType, byte? reportValue, byte? sensorIndex, CancellationToken ct = default);
     Task<IReadOnlyList<ForwardMessageStatus>> GetForwardMessageStatusesAsync(IEnumerable<long> messageIds, CancellationToken ct = default);
 }
 
-/// <summary>
-/// Client gọi thẳng OGWS Gateway REST API (không qua PollerConsole) để gửi lệnh xuống thiết bị SC1000
-/// ngay khi người dùng bấm "Gửi lệnh" ở /Map, theo Appendix B "GJD141 SC 1000 Reference Guide (for Partners)"
-/// — cùng cách mã hoá SIN/MIN với CommandBuilder.cs của PollerConsole (SIN=55 cố định).
-/// Token OAuth2 client_credentials được cache tĩnh (dùng chung giữa các request) vì mỗi lần bấm "Gửi lệnh"
-/// tạo 1 instance mới của lớp này (đăng ký qua AddHttpClient, vòng đời Transient).
-/// </summary>
 public class OgwsClient : IOgwsClient
 {
     private const int Sc1000Sin = 55;
 
     private static readonly JsonSerializerOptions JsonOptions = new() { PropertyNamingPolicy = null, PropertyNameCaseInsensitive = true };
+    // Token dùng chung giữa các client để tránh xác thực lại liên tục.
     private static readonly SemaphoreSlim TokenLock = new(1, 1);
     private static readonly SemaphoreSlim StatusRequestLock = new(1, 1);
     private static string? _cachedToken;
@@ -103,6 +96,7 @@ public class OgwsClient : IOgwsClient
         if (_http.BaseAddress is null || string.IsNullOrWhiteSpace(_options.AccessId) || string.IsNullOrWhiteSpace(_options.Password))
             return [];
 
+        // Tuần tự hóa lần hỏi trạng thái để cùng tuân theo thời gian chờ khi OGWS trả 429.
         await StatusRequestLock.WaitAsync(ct);
         try
         {
@@ -113,6 +107,7 @@ public class OgwsClient : IOgwsClient
             using var response = await SendGetAsync(url, ct);
             if (response.StatusCode == HttpStatusCode.Unauthorized)
             {
+                // Token có thể bị thu hồi trước hạn; làm mới rồi thử lại một lần.
                 await RefreshTokenAsync(ct, force: true);
                 using var retry = await SendGetAsync(url, ct);
                 if (retry.StatusCode == HttpStatusCode.TooManyRequests)
@@ -137,6 +132,7 @@ public class OgwsClient : IOgwsClient
 
     private void SetStatusRetryAfter(HttpResponseMessage response)
     {
+        // Nếu OGWS không gửi Retry-After, chờ hai phút trước lần hỏi tiếp theo.
         var now = DateTimeOffset.UtcNow;
         var retryAfter = response.Headers.RetryAfter;
         _statusRateLimit.PauseUntil(retryAfter?.Date
@@ -252,6 +248,7 @@ public class OgwsClient : IOgwsClient
             var token = await response.Content.ReadFromJsonAsync<GetTokenResponse>(cancellationToken: ct);
 
             _cachedToken = token?.AccessToken;
+            // Làm mới sớm một phút để tránh dùng token ngay sát thời điểm hết hạn.
             _tokenExpiresAtUtc = DateTime.UtcNow.AddSeconds((token?.ExpiresIn ?? 3600) - 60);
         }
         finally

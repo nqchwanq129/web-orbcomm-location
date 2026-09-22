@@ -1,4 +1,3 @@
-// wwwroot/js/pages/tracking/tracking-state.js
 import {
   parseReportTime,
   localDateFormatter,
@@ -12,7 +11,6 @@ let trackingSelectedMobileId = null;
 let trackingCurrentFilter = "all";
 let trackingSearchKeyword = "";
 
-// Chuyển dữ liệu số hợp lệ
 function numberOrNull(value) {
   if (
     value === null ||
@@ -26,13 +24,11 @@ function numberOrNull(value) {
   return Number(value);
 }
 
-// Định dạng thời gian tracking
 function formatTrackingDate(value) {
   const date = parseReportTime(value);
   return date ? localDateFormatter.format(date) : "—";
 }
 
-// Chuẩn hóa dữ liệu thiết bị
 function normalizeTrackingDevice(device) {
   const latitude = numberOrNull(device.latitude);
   const longitude = numberOrNull(device.longitude);
@@ -56,6 +52,7 @@ function normalizeTrackingDevice(device) {
     : device.doorValue === 1
       ? "door"
       : null;
+  // Cảnh báo được ưu tiên hơn trạng thái GPS và chuyển động trên bản đồ.
   const markerState = alertType ?? (device.staleFix === true ? "stale" : status);
 
   return {
@@ -84,7 +81,6 @@ function normalizeTrackingDevice(device) {
   };
 }
 
-// Đặt dữ liệu thiết bị
 export function setTrackingDevices(devices) {
   trackingDevices = devices
     .filter(
@@ -96,7 +92,6 @@ export function setTrackingDevices(devices) {
   trackingLoaded = true;
 }
 
-// Reset state
 export function resetTrackingState() {
   trackingDevices = [];
   trackingLoaded = false;
@@ -135,7 +130,6 @@ export function setTrackingSearchKeyword(keyword) {
   trackingSearchKeyword = keyword;
 }
 
-// Lấy danh sách sau khi lọc
 export function getFilteredTrackingDevices() {
   const keyword = trackingSearchKeyword.trim().toLowerCase();
 

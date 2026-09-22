@@ -1,5 +1,3 @@
-// wwwroot/js/pages/devices/devices-table.js
-
 import { loadDeviceAddress } from "./devices-location.js";
 import {
   escapeHtml,
@@ -8,7 +6,6 @@ import {
   parseReportTime,
 } from "./devices-formatters.js";
 
-// Hiển thị bảng thiết bị
 export function renderDevicesTable({
   devices,
   currentPage,
@@ -41,7 +38,6 @@ export function renderDevicesTable({
   }
 }
 
-// Tạo dòng thiết bị
 function createDeviceRow(device, onSelectDevice) {
   const row = document.createElement("tr");
   const locationId = `device-location-${device.mobileId}`;
@@ -79,7 +75,6 @@ function createDeviceRow(device, onSelectDevice) {
   return row;
 }
 
-// Hiển thị thời gian cập nhật
 function renderUpdateTime(row, device) {
   const updatedCell = row.querySelector(".devices-table__updated");
   const reportTime = parseReportTime(device.reportTimestampUtc);
@@ -99,7 +94,6 @@ function renderUpdateTime(row, device) {
   updatedCell.append(time);
 }
 
-// Hiển thị tooltip địa chỉ
 function initializeAddressTooltip(row) {
   const addressElement = row.querySelector(".devices-table__address");
 
@@ -117,7 +111,6 @@ function initializeAddressTooltip(row) {
   });
 }
 
-// Hiển thị trạng thái đang tải
 export function renderLoadingRow(tableBody) {
   tableBody.replaceChildren();
 
@@ -132,7 +125,6 @@ export function renderLoadingRow(tableBody) {
   tableBody.append(row);
 }
 
-// Hiển thị trạng thái trống
 export function renderEmptyRow(tableBody, message) {
   tableBody.replaceChildren();
 

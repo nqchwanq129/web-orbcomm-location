@@ -1,4 +1,3 @@
-// wwwroot/js/pages/tracking/tracking.js
 import {
   getSelectedMobileId,
   getTrackingDevice,
@@ -19,7 +18,6 @@ import { bindTrackingUiEvents } from "./tracking-events.js";
 
 export { openTrackingDevicePanel } from "./tracking-detail.js";
 
-// Hiển thị trang tracking
 export function renderTrackingPage() {
   resetTrackingState();
 
@@ -33,7 +31,6 @@ export function renderTrackingPage() {
   notifyTrackingMapResize();
 }
 
-// Cập nhật dữ liệu thiết bị
 export function updateTrackingDevices(devices) {
   setTrackingDevices(devices);
 
@@ -54,7 +51,6 @@ export function updateTrackingDevices(devices) {
   closeTrackingDevicePanel();
 }
 
-// Cập nhật trạng thái kết nối
 export function setTrackingConnectionStatus(message, isError = false) {
   setText("connection-status", message);
 

@@ -1,4 +1,3 @@
-//Models/DevicePosition.cs
 namespace WebsitesOrbcommLocations.Models;
 
 public sealed class DevicePosition

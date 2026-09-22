@@ -1,5 +1,3 @@
-// wwwroot/js/pages/devices/devices-formatters.js
-
 export const localDateFormatter = new Intl.DateTimeFormat("vi-VN", {
   day: "2-digit",
   month: "2-digit",
@@ -15,7 +13,6 @@ const relativeTimeFormatter = new Intl.RelativeTimeFormat("vi-VN", {
   numeric: "always",
 });
 
-// Định dạng thời gian báo cáo
 export function parseReportTime(value) {
   if (typeof value !== "string" || !value.trim()) return null;
 
@@ -26,7 +23,6 @@ export function parseReportTime(value) {
   return Number.isFinite(date.getTime()) ? date : null;
 }
 
-// Định dạng thời gian cập nhật
 export function formatUpdateTime(date) {
   const elapsedSeconds = (Date.now() - date.getTime()) / 1000;
 
@@ -52,21 +48,18 @@ export function formatUpdateTime(date) {
   return "Vừa xong";
 }
 
-// Định dạng trạng thái chuyển động
 export function getMotionText(value) {
   if (value === true) return "Đang di chuyển";
   if (value === false) return "Đứng yên";
   return "Không xác định";
 }
 
-// Lấy class trạng thái chuyển động
 export function getMotionClass(value) {
   if (value === true) return "device-detail__status--moving";
   if (value === false) return "device-detail__status--stopped";
   return "device-detail__status--unknown";
 }
 
-// Định dạng tốc độ
 export function formatSpeed(value) {
   if (value === null || value === undefined || value === "") return "—";
 
@@ -74,13 +67,11 @@ export function formatSpeed(value) {
   return Number.isFinite(speed) ? `${speed.toFixed(1)} km/h` : "—";
 }
 
-// Định dạng hướng
 export function formatHeading(value) {
   const heading = Number(value);
   return Number.isFinite(heading) ? `${heading.toFixed(0)}°` : "—";
 }
 
-// Định dạng pin
 export function formatBattery(value) {
   if (value === null || value === undefined || value === "") return "—";
 
@@ -91,13 +82,11 @@ export function formatBattery(value) {
   return `${battery.toFixed(2)} V`;
 }
 
-// Định dạng tọa độ
 export function formatCoordinate(value) {
   const coordinate = Number(value);
   return Number.isFinite(coordinate) ? coordinate.toFixed(6) : "—";
 }
 
-// Chống chèn HTML
 export function escapeHtml(value) {
   return String(value)
     .replaceAll("&", "&amp;")

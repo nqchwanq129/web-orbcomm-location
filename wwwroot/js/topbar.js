@@ -1,5 +1,3 @@
-// wwwroot/js/topbar.js
-
 export function renderTopbar() {
   const topbar = document.getElementById("topbar");
 
@@ -22,7 +20,6 @@ export function renderTopbar() {
         </div>
       </div>
     </div>
-
 
     <nav class="topbar__nav">
       <button
@@ -50,7 +47,6 @@ export function renderTopbar() {
       </button>
     </nav>
 
-
     <div class="topbar__actions">
       <div class="topbar__connection">
         <span class="topbar__connection-dot"></span>
@@ -58,7 +54,6 @@ export function renderTopbar() {
           Đang tải dữ liệu…
         </span>
       </div>
-
 
       <button
         class="topbar__icon-button topbar__notification-button"
@@ -86,7 +81,6 @@ export function renderTopbar() {
         <span class="topbar__notification-badge" hidden></span>
 
       </button>
-
 
       <section id="notification-panel" class="topbar__notification-panel" aria-label="Thông báo" hidden>
         <div class="topbar__notification-heading">

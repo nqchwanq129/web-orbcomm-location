@@ -1,35 +1,28 @@
-/* RESPONSIVE */
 @media (max-width: 1450px) {
   .tracking-page {
     grid-template-columns: 330px minmax(380px, 1fr) 0;
   }
-
   .tracking-page--detail-open {
     grid-template-columns: 330px minmax(380px, 1fr) 350px;
   }
-
   .tracking-device-panel {
     width: 350px;
     min-width: 0;
   }
-
   .tracking-sidebar__header,
   .tracking-detail-header {
     padding-left: 15px;
     padding-right: 15px;
   }
-
   .tracking-detail-content {
     padding-left: 15px;
     padding-right: 15px;
   }
 }
-
 @media (max-width: 1180px) {
   .tracking-page {
     grid-template-columns: 330px minmax(0, 1fr);
   }
-
   .tracking-device-panel {
     position: absolute;
     top: 0;
@@ -38,12 +31,10 @@
     box-shadow: -10px 0 30px rgb(16 24 40 / 12%);
   }
 }
-
 @media (max-width: 820px) {
   .tracking-page {
     grid-template-columns: 290px minmax(0, 1fr);
   }
-
   .tracking-map-legend,
   .tracking-map-status {
     display: none;

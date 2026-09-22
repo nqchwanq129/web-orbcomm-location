@@ -1,4 +1,3 @@
-// wwwroot/js/pages/history/history-table.js
 import { formatDate } from "../../date-format.js";
 import { openHistoryDetail } from "./history-detail.js";
 import {

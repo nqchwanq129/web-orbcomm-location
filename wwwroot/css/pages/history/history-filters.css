@@ -1,4 +1,3 @@
-/* FILTERS */
 .history-filters {
   display: grid;
   grid-template-columns:
@@ -13,20 +12,17 @@
   border-bottom: 1px solid #edf1f5;
   background: #fbfcfe;
 }
-
 .history-field {
   display: flex;
   flex-direction: column;
   gap: 7px;
   min-width: 0;
 }
-
 .history-field label {
   color: #475467;
   font-size: 0.75rem;
   font-weight: 600;
 }
-
 .history-field input,
 .history-field select {
   width: 100%;
@@ -43,30 +39,24 @@
     border-color 120ms ease,
     box-shadow 120ms ease;
 }
-
 .history-field input:focus,
 .history-field select:focus {
   border-color: var(--brand-navy);
   box-shadow: 0 0 0 3px rgb(40 34 98 / 8%);
 }
-
-/* DATE TIME */
 .history-field input[type="datetime-local"] {
   min-width: 0;
   padding: 0 8px 0 12px;
   color-scheme: light;
   font-variant-numeric: tabular-nums;
 }
-
 .history-field input[type="datetime-local"]:hover {
   border-color: #94aaca;
 }
-
 .history-field input[type="datetime-local"]:focus {
   border-color: var(--brand-navy);
   box-shadow: 0 0 0 3px rgb(40 34 98 / 12%);
 }
-
 .history-field input[type="datetime-local"]::-webkit-calendar-picker-indicator {
   width: 18px;
   height: 18px;
@@ -77,25 +67,20 @@
   cursor: pointer;
   transition: background-color 120ms ease;
 }
-
 .history-field
   input[type="datetime-local"]::-webkit-calendar-picker-indicator:hover {
   background-color: var(--brand-border);
 }
-
-/* DEVICE SELECT */
 .history-device-hint {
   margin-left: 5px;
   color: #667085;
   font-size: 0.7rem;
   font-weight: 400;
 }
-
 .history-device-input {
   position: relative;
   color: #667085;
 }
-
 .history-device-input > svg {
   position: absolute;
   top: 50%;
@@ -109,30 +94,24 @@
   stroke-linecap: round;
   pointer-events: none;
 }
-
 .history-device-input #history-device {
   padding-left: 38px;
   background: #fff;
 }
-
 .history-device-input #history-device::placeholder {
   color: #667085;
   opacity: 1;
 }
-
 .history-device-input #history-device:hover {
   border-color: #94aaca;
 }
-
 .history-device-input:focus-within {
   color: var(--brand-navy);
 }
-
 .history-device-input #history-device:focus {
   border-color: var(--brand-navy);
   box-shadow: 0 0 0 3px rgb(40 34 98 / 12%);
 }
-
 .history-device-help {
   position: absolute;
   width: 1px;
@@ -143,13 +122,10 @@
   clip-path: inset(50%);
   white-space: nowrap;
 }
-
-/* TYPE SELECT */
 .history-type-select {
   position: relative;
   min-width: 0;
 }
-
 .history-type-trigger {
   display: flex;
   align-items: center;
@@ -167,7 +143,6 @@
   text-align: left;
   cursor: pointer;
 }
-
 .history-type-trigger::after {
   content: "";
   flex-shrink: 0;
@@ -177,19 +152,15 @@
   border-bottom: 2px solid currentColor;
   transform: rotate(45deg) translateY(-2px);
 }
-
 .history-type-trigger:hover {
   border-color: #94aaca;
 }
-
 .history-type-trigger:focus-visible,
 .history-type-trigger[aria-expanded="true"] {
   outline: none;
   border-color: var(--brand-navy);
   box-shadow: 0 0 0 3px rgb(40 34 98 / 12%);
 }
-
-/* OPTIONS */
 .history-device-options {
   position: absolute;
   top: calc(100% + 6px);
@@ -205,7 +176,6 @@
   background: #fff;
   box-shadow: 0 8px 24px rgb(15 23 42 / 12%);
 }
-
 .history-device-options [role="option"] {
   padding: 10px;
   border-radius: 6px;
@@ -214,20 +184,16 @@
   overflow-wrap: anywhere;
   cursor: pointer;
 }
-
 .history-device-options [role="option"]:hover,
 .history-device-options [aria-selected="true"] {
   background: var(--brand-navy-soft);
   color: var(--brand-navy-dark);
 }
-
 .history-device-options__empty {
   padding: 10px;
   color: #667085;
   font-size: 0.8rem;
 }
-
-/* SEARCH BUTTON */
 .history-search-button {
   display: flex;
   align-items: center;
@@ -248,15 +214,12 @@
     background 120ms ease,
     transform 120ms ease;
 }
-
 .history-search-button:hover {
   background: var(--brand-navy-dark);
 }
-
 .history-search-button:active {
   transform: scale(0.98);
 }
-
 .history-search-button svg {
   width: 18px;
   height: 18px;

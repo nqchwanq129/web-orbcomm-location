@@ -1,4 +1,3 @@
-/* PANEL */
 .tracking-device-panel {
   position: relative;
   z-index: 4;
@@ -17,26 +16,21 @@
     opacity 0.2s ease,
     transform 0.25s ease;
 }
-
 .tracking-page--detail-open .tracking-device-panel {
   opacity: 1;
   pointer-events: auto;
   transform: translateX(0);
 }
-
 .tracking-device-panel button:disabled {
   opacity: 0.45;
   cursor: default;
 }
-
-/* HEADER */
 .tracking-detail-header {
   padding: 18px 18px 14px;
   border-top: 3px solid var(--brand-orange);
   border-bottom: 1px solid var(--tracking-border);
   background: var(--brand-navy-soft);
 }
-
 .tracking-detail-header__eyebrow,
 .tracking-detail-section__eyebrow {
   display: block;
@@ -48,21 +42,18 @@
   letter-spacing: 0.08em;
   text-transform: uppercase;
 }
-
 .tracking-detail-header__top {
   display: flex;
   align-items: flex-start;
   justify-content: space-between;
   gap: 12px;
 }
-
 .tracking-detail-header h2 {
   margin: 0;
   color: var(--tracking-text);
   font-size: 18px;
   line-height: 1.3;
 }
-
 .tracking-detail-header__status {
   display: flex;
   align-items: center;
@@ -70,12 +61,10 @@
   gap: 8px;
   margin-top: 11px;
 }
-
 .tracking-detail-header__status > span:last-child {
   color: #98a2b3;
   font-size: 10px;
 }
-
 .tracking-detail-sensor-alert {
   padding: 5px 8px;
   border-radius: 20px;
@@ -83,20 +72,15 @@
   font-weight: 700;
   white-space: nowrap;
 }
-
 .tracking-detail-sensor-alert[hidden] { display: none; }
-
 .tracking-detail-sensor-alert--distress {
   background: #fef2f2;
   color: #b42318;
 }
-
 .tracking-detail-sensor-alert--door {
   background: #fff7ed;
   color: #c2410c;
 }
-
-/* CLOSE */
 .tracking-detail-close {
   display: grid;
   place-items: center;
@@ -110,12 +94,10 @@
   color: #667085;
   cursor: pointer;
 }
-
 .tracking-detail-close:hover {
   background: #f1f5f9;
   color: var(--brand-navy);
 }
-
 .tracking-detail-close svg {
   width: 16px;
   height: 16px;
@@ -124,8 +106,6 @@
   stroke-width: 1.8;
   stroke-linecap: round;
 }
-
-/* DEVICE STATE */
 .tracking-device-state {
   display: inline-flex;
   align-items: center;
@@ -137,28 +117,22 @@
   font-size: 10px;
   font-weight: 700;
 }
-
 .tracking-device-state--moving {
   background: #ecfdf3;
   color: #15803d;
 }
-
 .tracking-device-state--stopped {
   background: #f2f4f7;
   color: #475467;
 }
-
 .tracking-device-state--unknown {
   background: #f2f4f7;
   color: #475467;
 }
-
 .tracking-device-state--alert {
   background: #fef2f2;
   color: #b42318;
 }
-
-/* CONTENT */
 .tracking-detail-content {
   flex: 1;
   min-height: 0;
@@ -167,16 +141,13 @@
   scrollbar-width: thin;
   scrollbar-color: #ccd5df transparent;
 }
-
 .tracking-detail-section {
   padding: 18px 0;
   border-bottom: 1px solid #edf1f5;
 }
-
 .tracking-detail-section:last-child {
   border-bottom: 0;
 }
-
 .tracking-detail-section__heading,
 .tracking-detail-section__title {
   display: flex;
@@ -184,27 +155,22 @@
   justify-content: space-between;
   gap: 12px;
 }
-
 .tracking-detail-section__heading h3 {
   margin: 0;
   color: var(--tracking-text);
   font-size: 13px;
   font-weight: 700;
 }
-
 .tracking-detail-section__title {
   align-items: center;
   margin-bottom: 12px;
 }
-
 .tracking-detail-section__title h3 {
   margin: 0;
   color: var(--tracking-text);
   font-size: 12px;
   font-weight: 700;
 }
-
-/* LOCATION */
 .tracking-detail-location-button {
   display: grid;
   place-items: center;
@@ -217,7 +183,6 @@
   color: var(--tracking-blue);
   cursor: pointer;
 }
-
 .tracking-detail-location-button svg {
   width: 16px;
   height: 16px;
@@ -226,8 +191,6 @@
   stroke-width: 1.8;
   stroke-linecap: round;
 }
-
-/* COORDINATE */
 .tracking-coordinate-box {
   position: relative;
   display: grid;
@@ -239,25 +202,21 @@
   border-radius: 9px;
   background: #f8fafc;
 }
-
 .tracking-coordinate-box div {
   display: flex;
   flex-direction: column;
   gap: 2px;
 }
-
 .tracking-coordinate-box span {
   color: #98a2b3;
   font-size: 9px;
   text-transform: uppercase;
 }
-
 .tracking-coordinate-box strong {
   color: #344054;
   font-size: 11px;
   font-weight: 600;
 }
-
 .tracking-coordinate-box button {
   position: absolute;
   top: 50%;
@@ -274,7 +233,6 @@
   cursor: pointer;
   transform: translateY(-50%);
 }
-
 .tracking-coordinate-box svg {
   width: 14px;
   height: 14px;
@@ -282,14 +240,11 @@
   stroke: currentColor;
   stroke-width: 1.6;
 }
-
-/* METRICS */
 .tracking-metrics {
   display: grid;
   grid-template-columns: repeat(2, 1fr);
   gap: 8px;
 }
-
 .tracking-metric {
   display: flex;
   align-items: center;
@@ -300,7 +255,6 @@
   border-radius: 9px;
   background: #fafbfd;
 }
-
 .tracking-metric__icon {
   display: grid;
   place-items: center;
@@ -311,7 +265,6 @@
   background: var(--brand-navy-soft);
   color: var(--brand-navy);
 }
-
 .tracking-metric__icon svg {
   width: 17px;
   height: 17px;
@@ -321,19 +274,16 @@
   stroke-linecap: round;
   stroke-linejoin: round;
 }
-
 .tracking-metric > div:last-child {
   display: flex;
   flex-direction: column;
   gap: 2px;
   min-width: 0;
 }
-
 .tracking-metric span {
   color: #7d8b9f;
   font-size: 9px;
 }
-
 .tracking-metric strong {
   overflow: hidden;
   color: #27364a;
@@ -341,14 +291,11 @@
   text-overflow: ellipsis;
   white-space: nowrap;
 }
-
 .tracking-metric small {
   color: #667085;
   font-size: 9px;
   font-weight: 500;
 }
-
-/* ALERT */
 .tracking-alert-badge {
   padding: 4px 7px;
   border-radius: 20px;
@@ -357,17 +304,14 @@
   font-size: 9px;
   font-weight: 700;
 }
-
 .tracking-alert-badge--normal {
   background: #ecfdf3;
   color: #15803d;
 }
-
 .tracking-alert-badge--stale {
   background: var(--status-warning-soft);
   color: var(--status-warning-ink);
 }
-
 .tracking-alert-card {
   display: flex;
   gap: 10px;
@@ -376,7 +320,6 @@
   border-radius: 9px;
   background: var(--tracking-red-soft);
 }
-
 .tracking-alert-card__icon {
   display: grid;
   place-items: center;
@@ -387,7 +330,6 @@
   background: #fee2e2;
   color: #dc2626;
 }
-
 .tracking-alert-card__icon svg {
   width: 17px;
   height: 17px;
@@ -397,7 +339,6 @@
   stroke-linecap: round;
   stroke-linejoin: round;
 }
-
 .tracking-alert-card__content {
   display: flex;
   flex: 1;
@@ -405,18 +346,15 @@
   gap: 4px;
   min-width: 0;
 }
-
 .tracking-alert-card__content > strong {
   color: #991b1b;
   font-size: 10px;
 }
-
 .tracking-alert-card__content > span {
   color: #b45353;
   font-size: 9px;
   line-height: 1.5;
 }
-
 .tracking-alert-card__meta {
   display: flex;
   justify-content: space-between;
@@ -426,11 +364,9 @@
   color: #b45353;
   font-size: 9px;
 }
-
 .tracking-alert-card__meta strong {
   color: #991b1b;
 }
-
 .tracking-alert-empty {
   display: flex;
   align-items: center;
@@ -440,7 +376,6 @@
   border-radius: 9px;
   background: #f8fafc;
 }
-
 .tracking-alert-empty__icon {
   display: grid;
   place-items: center;
@@ -451,7 +386,6 @@
   background: #ecfdf3;
   color: #16a34a;
 }
-
 .tracking-alert-empty__icon svg {
   width: 17px;
   height: 17px;
@@ -461,24 +395,19 @@
   stroke-linecap: round;
   stroke-linejoin: round;
 }
-
 .tracking-alert-empty > div:last-child {
   display: flex;
   flex-direction: column;
   gap: 3px;
 }
-
 .tracking-alert-empty strong {
   color: #344054;
   font-size: 10px;
 }
-
 .tracking-alert-empty span {
   color: #7d8b9f;
   font-size: 9px;
 }
-
-/* MESSAGE */
 .tracking-message-badge {
   max-width: 145px;
   padding: 4px 7px;
@@ -491,11 +420,9 @@
   text-overflow: ellipsis;
   white-space: nowrap;
 }
-
 .tracking-detail-info {
   margin: 0;
 }
-
 .tracking-detail-info > div {
   display: grid;
   grid-template-columns: 115px 1fr;
@@ -503,16 +430,13 @@
   padding: 7px 0;
   border-bottom: 1px dashed #edf1f5;
 }
-
 .tracking-detail-info > div:last-child {
   border-bottom: 0;
 }
-
 .tracking-detail-info dt {
   color: #7d8b9f;
   font-size: 10px;
 }
-
 .tracking-detail-info dd {
   margin: 0;
   overflow: hidden;
@@ -522,8 +446,6 @@
   text-align: right;
   text-overflow: ellipsis;
 }
-
-/* FOOTER */
 .tracking-detail-footer {
   display: flex;
   align-items: center;
@@ -535,7 +457,6 @@
   color: #98a2b3;
   font-size: 9px;
 }
-
 .tracking-detail-footer > div {
   display: flex;
   align-items: center;

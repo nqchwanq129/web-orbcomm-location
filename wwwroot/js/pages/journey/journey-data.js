@@ -3,6 +3,7 @@ const STOP_MS = 10 * 60 * 1000;
 const STOP_RADIUS_KM = 0.15;
 
 export function findStops(data) {
+  // Chỉ tính là điểm dừng khi vị trí giữ gần nhau ít nhất mười phút.
   const result = [];
   let start = 0;
   for (let i = 1; i <= data.length; i++) {
@@ -29,4 +30,3 @@ export function distanceKm(a, b) {
   const x = Math.sin(dLat / 2) ** 2 + Math.cos(Number(a.latitude) * rad) * Math.cos(Number(b.latitude) * rad) * Math.sin(dLon / 2) ** 2;
   return 12742 * Math.asin(Math.min(1, Math.sqrt(x)));
 }
-

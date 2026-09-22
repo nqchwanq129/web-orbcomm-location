@@ -1,5 +1,3 @@
-// Repositories/DeviceRepository.cs
-
 using Dapper;
 using Microsoft.Data.SqlClient;
 using WebsitesOrbcommLocations.Models;
@@ -10,7 +8,6 @@ public sealed class DeviceRepository : IDeviceRepository
 {
     private readonly string _connectionString;
 
-
     public DeviceRepository(IConfiguration configuration)
     {
         _connectionString =
@@ -20,9 +17,9 @@ public sealed class DeviceRepository : IDeviceRepository
             );
     }
 
-
     public async Task<IReadOnlyList<DevicePosition>> GetLatestPositionsAsync()
     {
+        // Lấy giá trị cảm biến mới nhất theo từng thiết bị từ lịch sử bản tin.
         const string sql = """
             SELECT
                 MobileID AS MobileId,
@@ -84,20 +81,16 @@ public sealed class DeviceRepository : IDeviceRepository
             ORDER BY MobileID;
             """;
 
-
         await using var connection =
             new SqlConnection(_connectionString);
-
 
         var devices =
             await connection.QueryAsync<DevicePosition>(
                 sql
             );
 
-
         return devices.AsList();
     }
-
 
     public async Task<IReadOnlyList<DeviceHistory>> GetDeviceHistoryAsync(
         string? mobileId,
@@ -105,6 +98,7 @@ public sealed class DeviceRepository : IDeviceRepository
         DateTime? to,
         string? messageType)
     {
+        // MessageUTC lưu giờ UTC; bên gọi cần truyền mốc lọc cùng múi giờ.
         const string sql = """
             SELECT
                 LogID AS LogId,
@@ -141,10 +135,8 @@ public sealed class DeviceRepository : IDeviceRepository
             ORDER BY MessageUTC DESC;
             """;
 
-
         await using var connection =
             new SqlConnection(_connectionString);
-
 
         var history =
             await connection.QueryAsync<DeviceHistory>(
@@ -167,7 +159,6 @@ public sealed class DeviceRepository : IDeviceRepository
                             : messageType
                 }
             );
-
 
         return history.AsList();
     }
@@ -245,6 +236,7 @@ public sealed class DeviceRepository : IDeviceRepository
 
     public async Task<IReadOnlyList<DeviceCommand>> GetPendingDeviceCommandsAsync(long afterCommandId)
     {
+        // Mỗi lượt chỉ lấy 50 lệnh để tránh gọi OGWS với danh sách quá lớn.
         const string sql = """
             SELECT TOP (50)
                 CommandID AS CommandId, MobileID AS MobileId, CommandType, ReportValue, SensorIndex,
@@ -265,6 +257,7 @@ public sealed class DeviceRepository : IDeviceRepository
         string mobileId, string commandType, int? reportValue, int? sensorIndex,
         string status, long? forwardMessageId, int? errorId, string requestedBy)
     {
+        // CommandQueue lưu lịch sử sau khi gửi; trạng thái Submitted còn chờ OGWS xác nhận.
         const string sql = """
             INSERT INTO dbo.CommandQueue
                 (MobileID, CommandType, ReportValue, SensorIndex, Status,
@@ -295,6 +288,7 @@ public sealed class DeviceRepository : IDeviceRepository
 
     public async Task UpdateDeviceCommandStatusAsync(long commandId, string status, int? errorId)
     {
+        // Chỉ chuyển trạng thái lệnh còn Submitted để không ghi đè kết quả cuối.
         const string sql = """
             UPDATE dbo.CommandQueue
             SET Status = @Status, ErrorID = @ErrorId, StatusUpdatedAt = SYSUTCDATETIME()

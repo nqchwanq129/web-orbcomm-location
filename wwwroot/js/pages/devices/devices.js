@@ -1,5 +1,3 @@
-// wwwroot/js/pages/devices/devices.js
-
 import { getDevices } from "../../api.js";
 import { renderDeviceDetailPage } from "./device-detail.js";
 import {
@@ -15,7 +13,6 @@ let currentPage = 1;
 const pageSize = 12;
 let updateTimeTimer;
 
-// Hiển thị trang danh sách thiết bị
 export function renderDevicesPage() {
   clearTimeout(updateTimeTimer);
 
@@ -93,7 +90,6 @@ export function renderDevicesPage() {
   `;
 }
 
-// Khởi tạo trang danh sách thiết bị
 export async function initializeDevicesPage() {
   const searchInput = document.getElementById("devices-search");
   const previousButton = document.getElementById("devices-prev");
@@ -128,7 +124,6 @@ export async function initializeDevicesPage() {
   startUpdateTimeTimer(tableBody);
 }
 
-// Tải dữ liệu thiết bị
 async function loadDevices() {
   const tableBody = document.getElementById("devices-table-body");
   const totalText = document.getElementById("devices-total-text");
@@ -164,7 +159,6 @@ async function loadDevices() {
   }
 }
 
-// Lọc thiết bị
 function filterDevices() {
   const keyword = document
     .getElementById("devices-search")
@@ -178,7 +172,6 @@ function filterDevices() {
   renderTable();
 }
 
-// Hiển thị bảng
 function renderTable() {
   renderDevicesTable({
     devices: filteredDevices,
@@ -190,7 +183,6 @@ function renderTable() {
   updatePagination();
 }
 
-// Mở chi tiết thiết bị
 function openDeviceDetail(device) {
   clearTimeout(updateTimeTimer);
 
@@ -200,7 +192,6 @@ function openDeviceDetail(device) {
   });
 }
 
-// Cập nhật phân trang
 function updatePagination() {
   const totalPages = getTotalPages();
   const resultCount = document.getElementById("devices-result-count");
@@ -216,12 +207,10 @@ function updatePagination() {
   nextButton.disabled = currentPage >= totalPages;
 }
 
-// Tính tổng số trang
 function getTotalPages() {
   return Math.max(1, Math.ceil(filteredDevices.length / pageSize));
 }
 
-// Cập nhật thời gian tương đối
 function startUpdateTimeTimer(tableBody) {
   function refreshTimes() {
     if (!tableBody?.isConnected) return;

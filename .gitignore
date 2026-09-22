@@ -6,6 +6,7 @@
 # dotenv files
 .env
 /appsettings.Development.local.json
+/appsettings.Local.json
 
 # Local GIS reference files
 /GIS/

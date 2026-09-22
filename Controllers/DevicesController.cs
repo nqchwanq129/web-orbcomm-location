@@ -1,5 +1,3 @@
-// Controllers/DevicesController.cs
-
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Authorization;
 using WebsitesOrbcommLocations.Models;
@@ -18,14 +16,12 @@ public sealed class DevicesController : ControllerBase
     private readonly IOgwsClient _ogwsClient;
     private readonly OgwsStatusRateLimit _statusRateLimit;
 
-
     public DevicesController(IDeviceRepository deviceRepository, IOgwsClient ogwsClient, OgwsStatusRateLimit statusRateLimit)
     {
         _deviceRepository = deviceRepository;
         _ogwsClient = ogwsClient;
         _statusRateLimit = statusRateLimit;
     }
-
 
     [HttpGet]
     [ProducesResponseType<IReadOnlyList<DevicePosition>>(
@@ -38,7 +34,6 @@ public sealed class DevicesController : ControllerBase
 
         return Ok(devices);
     }
-
 
     [HttpGet("history")]
     [ProducesResponseType<IReadOnlyList<DeviceHistory>>(
@@ -84,6 +79,7 @@ public sealed class DevicesController : ControllerBase
     {
         if (string.IsNullOrWhiteSpace(mobileId)) return BadRequest("Thiếu Mobile ID.");
 
+        // Giới hạn tham số theo loại lệnh trước khi gọi OGWS.
         var valid = request.CommandType switch
         {
             "requestReport" => request.ReportValue is >= 0 and <= 7 or 9 && request.SensorIndex is null,
@@ -100,6 +96,7 @@ public sealed class DevicesController : ControllerBase
             request.SensorIndex is int sensorIndex ? (byte)sensorIndex : null,
             cancellationToken);
 
+        // Ghi cả lệnh gửi thất bại để có thể tra lại người gửi và lỗi.
         var command = await _deviceRepository.SaveDeviceCommandAsync(
             mobileId, request.CommandType!, request.ReportValue, request.SensorIndex,
             result.Success ? "Submitted" : "SubmitFailed",
@@ -116,8 +113,8 @@ public sealed class DevicesController : ControllerBase
     }
 
     [HttpGet("history/{logId:long}")]
-[ProducesResponseType<DeviceHistoryDetail>(StatusCodes.Status200OK)]
-[ProducesResponseType(StatusCodes.Status404NotFound)]
+    [ProducesResponseType<DeviceHistoryDetail>(StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status404NotFound)]
 public async Task<ActionResult<DeviceHistoryDetail>> GetHistoryDetail(long logId)
 {
     var detail = await _deviceRepository.GetDeviceHistoryDetailAsync(logId);

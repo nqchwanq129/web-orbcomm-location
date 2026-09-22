@@ -3,7 +3,12 @@ import { clearJourneyMarker, destroyJourneyMap, focusJourneyPoint, renderJourney
 import { getDevices, getDeviceHistory } from "../../api.js";
 
 const GAP_MS = 30 * 60 * 1000;
-const formatter = new Intl.DateTimeFormat("vi-VN", { day: "2-digit", month: "2-digit", hour: "2-digit", minute: "2-digit" });
+// Thời gian nhập được hiểu theo giờ Việt Nam, độc lập với múi giờ trình duyệt.
+const formatter = new Intl.DateTimeFormat("vi-VN", { day: "2-digit", month: "2-digit", hour: "2-digit", minute: "2-digit", timeZone: "Asia/Ho_Chi_Minh" });
+const vietnamInputFormatter = new Intl.DateTimeFormat("en-CA", {
+  year: "numeric", month: "2-digit", day: "2-digit", hour: "2-digit", minute: "2-digit",
+  hourCycle: "h23", timeZone: "Asia/Ho_Chi_Minh",
+});
 let request;
 let points = [];
 let selected = -1;
@@ -22,8 +27,8 @@ export function renderJourneyPage() {
           <button type="button" data-hours="1">1 giờ</button><button type="button" data-hours="6">6 giờ</button>
           <button type="button" data-hours="24" class="is-active">24 giờ</button><button type="button" data-hours="168">7 ngày</button>
         </div>
-        <label>Từ <input id="journey-from" type="datetime-local"></label>
-        <label>Đến <input id="journey-to" type="datetime-local"></label>
+        <label>Từ (giờ Việt Nam) <input id="journey-from" type="datetime-local"></label>
+        <label>Đến (giờ Việt Nam) <input id="journey-to" type="datetime-local"></label>
         <button id="journey-search" type="button">Xem hành trình</button>
       </div>
       <p id="journey-status" class="journey-status" role="status">Chọn thiết bị để xem hành trình.</p>
@@ -84,8 +89,8 @@ async function loadJourney() {
   const mobileId = document.getElementById("journey-device").value;
   const from = document.getElementById("journey-from").value;
   const to = document.getElementById("journey-to").value;
-  const start = new Date(from);
-  const end = new Date(to);
+  const start = new Date(`${from}+07:00`);
+  const end = new Date(`${to}+07:00`);
   if (!mobileId) return setStatus("Hãy chọn một thiết bị.", true);
   if (!from || !to || !Number.isFinite(start.getTime()) || !Number.isFinite(end.getTime()) || start >= end || end - start > 7 * 86400000) {
     return setStatus("Chọn khoảng thời gian hợp lệ, tối đa 7 ngày.", true);
@@ -118,6 +123,7 @@ function renderJourney(total) {
   let distance = 0;
   points.forEach((point, index) => {
     const previous = points[index - 1];
+    // Ngắt đoạn đường khi hai bản tin cách nhau quá lâu.
     if (previous && Date.parse(point.messageUtc) - Date.parse(previous.messageUtc) > GAP_MS) {
       gaps.push(index);
       if (segment.length > 1) lines.push(segment);
@@ -189,7 +195,11 @@ function setStatus(message, error = false) {
 function setRange(hours) {
   const end = new Date();
   const start = new Date(end.getTime() - hours * 3600000);
-  const local = date => new Date(date.getTime() - date.getTimezoneOffset() * 60000).toISOString().slice(0, 16);
-  document.getElementById("journey-from").value = local(start);
-  document.getElementById("journey-to").value = local(end);
+  document.getElementById("journey-from").value = formatVietnamInput(start);
+  document.getElementById("journey-to").value = formatVietnamInput(end);
+}
+
+function formatVietnamInput(date) {
+  const parts = Object.fromEntries(vietnamInputFormatter.formatToParts(date).map(part => [part.type, part.value]));
+  return `${parts.year}-${parts.month}-${parts.day}T${parts.hour}:${parts.minute}`;
 }

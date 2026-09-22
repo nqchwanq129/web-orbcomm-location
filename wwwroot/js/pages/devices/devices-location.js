@@ -1,8 +1,5 @@
-// wwwroot/js/pages/devices/devices-location.js
-
 const addressCache = new Map();
 
-// Tải địa chỉ từ tọa độ
 export async function loadDeviceAddress(elementId, latitude, longitude) {
   const element = document.getElementById(elementId);
 
@@ -16,6 +13,7 @@ export async function loadDeviceAddress(elementId, latitude, longitude) {
     return;
   }
 
+  // Dùng cùng địa chỉ đã tra cho tọa độ lặp lại trong phiên mở trang.
   const cacheKey = `${lat.toFixed(6)},${lng.toFixed(6)}`;
 
   if (addressCache.has(cacheKey)) {
@@ -40,7 +38,6 @@ export async function loadDeviceAddress(elementId, latitude, longitude) {
   }
 }
 
-// Chuyển tọa độ thành địa chỉ
 async function reverseGeocode(latitude, longitude) {
   const params = new URLSearchParams({
     format: "jsonv2",

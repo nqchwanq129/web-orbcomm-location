@@ -1,5 +1,3 @@
-// wwwroot/js/pages/tracking/tracking-commands.js
-
 const TRACKING_COMMANDS = {
   requestReport: {
     label: "Yêu cầu báo cáo",
@@ -50,7 +48,6 @@ let historyRequestId = 0;
 let visibleHistoryCount = 5;
 let commandHistory = [];
 
-// Hiển thị khu vực gửi lệnh
 export function renderTrackingCommands(device) {
   const nextMobileId = device?.mobileId ?? null;
   if (currentMobileId !== nextMobileId) {
@@ -73,6 +70,7 @@ export function renderTrackingCommands(device) {
 
 export async function loadTrackingCommandHistory(resetVisible = true) {
   const mobileId = currentMobileId;
+  // Mỗi lần tải tăng mã yêu cầu để bỏ phản hồi đến muộn của thiết bị trước.
   const requestId = ++historyRequestId;
   if (resetVisible) {
     visibleHistoryCount = 5;
@@ -195,7 +193,6 @@ function formatCommandTime(value) {
   }).format(date);
 }
 
-// Hiển thị danh sách lệnh
 function renderTrackingCommandOptions() {
   const select = document.getElementById("tracking-command-type");
 
@@ -213,7 +210,6 @@ function renderTrackingCommandOptions() {
   select.addEventListener("change", updateTrackingCommandParameter);
 }
 
-// Cập nhật tham số theo loại lệnh
 function updateTrackingCommandParameter() {
   const commandSelect = document.getElementById("tracking-command-type");
   const parameterGroup = document.getElementById(
@@ -249,7 +245,6 @@ function updateTrackingCommandParameter() {
   });
 }
 
-// Lấy dữ liệu lệnh hiện tại
 export function getTrackingCommandPayload() {
   const commandSelect = document.getElementById("tracking-command-type");
   const parameterSelect = document.getElementById("tracking-command-parameter");

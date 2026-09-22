@@ -1,4 +1,3 @@
-// wwwroot/js/pages/history/history.js
 import { getDeviceHistory } from "../../api.js";
 import {
   getHistoryFilters,
@@ -13,7 +12,6 @@ let historyData = [];
 let currentPage = 1;
 const pageSize = 15;
 
-// Hiển thị trang lịch sử
 export function renderHistoryPage() {
   const pageContent = document.getElementById("page-content");
 
@@ -158,7 +156,6 @@ export function renderHistoryPage() {
   `;
 }
 
-// Khởi tạo trang lịch sử
 export async function initializeHistoryPage({ mobileId = "" } = {}) {
   setDefaultDateRange();
   initializeMessageTypeSelect();
@@ -210,7 +207,6 @@ export async function initializeHistoryPage({ mobileId = "" } = {}) {
   }
 }
 
-// Tải dữ liệu lịch sử
 async function loadHistory() {
   const filters = getHistoryFilters();
   const searchButton = document.getElementById("history-search");

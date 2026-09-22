@@ -2,12 +2,12 @@ using WebsitesOrbcommLocations.Repositories;
 
 namespace WebsitesOrbcommLocations.Services.Ogws;
 
-/// <summary>Refreshes submitted command statuses independently of browser requests.</summary>
 public sealed class CommandStatusWorker(
     IServiceScopeFactory scopeFactory,
     ILogger<CommandStatusWorker> logger) : BackgroundService
 {
     private static readonly TimeSpan CheckInterval = TimeSpan.FromMinutes(1);
+    // Con trỏ giúp duyệt tiếp khi có nhiều lệnh đang chờ.
     private long _lastCommandId;
 
     protected override async Task ExecuteAsync(CancellationToken stoppingToken)
@@ -23,6 +23,7 @@ public sealed class CommandStatusWorker(
                 var pending = await repository.GetPendingDeviceCommandsAsync(_lastCommandId);
                 if (pending.Count == 0)
                 {
+                    // Quay về đầu để kiểm tra lại các lệnh cũ chưa có kết quả cuối.
                     _lastCommandId = 0;
                     pending = await repository.GetPendingDeviceCommandsAsync(0);
                 }
@@ -38,6 +39,7 @@ public sealed class CommandStatusWorker(
                         if (status.ID is not ulong id || id > long.MaxValue ||
                             !byMessageId.TryGetValue((long)id, out var commands)) continue;
 
+                        // Chỉ các trạng thái cuối mới được ghi vào CommandQueue.
                         var finalStatus = status.State switch
                         {
                             1 => "Acknowledged",

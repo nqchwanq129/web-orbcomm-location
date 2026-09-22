@@ -1,4 +1,3 @@
-// wwwroot/js/pages/tracking/tracking-sidebar.js
 import { escapeHtml } from "../devices/devices-formatters.js";
 import {
   getFilteredTrackingDevices,
@@ -7,7 +6,6 @@ import {
   isTrackingLoaded,
 } from "./tracking-state.js";
 
-// Cập nhật tổng quan thiết bị
 export function renderTrackingSummary() {
   const devices = getTrackingDevices();
 
@@ -26,7 +24,6 @@ export function renderTrackingSummary() {
   setText("tracking-map-device-count", `${devices.length} thiết bị`);
 }
 
-// Hiển thị danh sách thiết bị
 export function renderTrackingDeviceList() {
   const deviceList = document.getElementById("device-list");
 
@@ -63,7 +60,6 @@ function getEmptyMessage() {
   return "Không tìm thấy thiết bị phù hợp.";
 }
 
-// Hiển thị card thiết bị
 function renderTrackingDeviceCard(device) {
   const selectedMobileId = getSelectedMobileId();
 
