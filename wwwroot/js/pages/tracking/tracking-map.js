@@ -1,3 +1,5 @@
+import { addIslandLabels } from "../../island-labels.js";
+
 let map;
 
 const markers = new Map();
@@ -42,6 +44,7 @@ export function initializeMap() {
     zoom: 5,
   });
   map.addControl(new maplibre.NavigationControl(), "top-right");
+  addIslandLabels(map);
   return map;
 }
 

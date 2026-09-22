@@ -25,6 +25,20 @@ body {
 body {
   margin: 0;
 }
+.island-label {
+  display: block;
+  padding: 4px 7px;
+  border: 1px solid rgb(40 34 98 / 25%);
+  border-radius: 5px;
+  background: rgb(255 255 255 / 88%);
+  color: var(--brand-navy);
+  font-size: 11px;
+  font-weight: 700;
+  line-height: 1.2;
+  white-space: nowrap;
+  box-shadow: 0 1px 4px rgb(16 24 40 / 12%);
+  pointer-events: none;
+}
 .app-shell {
   display: grid;
   grid-template-rows: 84px minmax(0, 1fr);

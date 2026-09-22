@@ -44,7 +44,7 @@ window.maplibregl = {
   NavigationControl: class {},
   LngLatBounds: class { extend() {} },
   Marker: class {
-    constructor() { this.element = document.createElement('button'); markers.push(this); }
+    constructor(options = {}) { this.element = options.element ?? document.createElement('button'); markers.push(this); }
     setLngLat(position) { this.position = position; return this; }
     addTo() { document.getElementById('map').append(this.element); return this; }
     getElement() { return this.element; }
@@ -68,11 +68,12 @@ try {
   assert(text('tracking-detail-battery') === '3.30' && text('tracking-temperature') === '36 °C', 'DB battery and temperature');
   assert(text('tracking-report-source') === 'GPS' && text('tracking-report-time') === '—', 'Report source and nullable timestamp');
   assert(text('tracking-message-time') === text('tracking-message-updated'), 'SQL UTC timestamp without suffix matches explicit UTC');
+  assert([...document.querySelectorAll('.island-label')].map(item => item.textContent).join(',') === 'Quần đảo Hoàng Sa,Quần đảo Trường Sa', 'Island labels appear on the map');
   const mapBox = document.querySelector('.tracking-map-area').getBoundingClientRect();
   const panelBox = document.querySelector('.tracking-device-panel').getBoundingClientRect();
   assert(Math.abs(panelBox.top - mapBox.top) < 1, 'Detail stays on the map row');
   document.getElementById('tracking-detail-close').click();
-  markers[0].element.click();
+  markers.find(item => item.element.getAttribute('aria-label')?.startsWith('Chi tiết thiết bị'))?.element.click();
   assert(document.querySelector('.tracking-page--detail-open') && focusCount >= 2, 'Marker opens detail and focuses without popup API');
   document.getElementById('fit-all-devices').click();
   window.dispatchEvent(new CustomEvent('tracking:map-resize'));

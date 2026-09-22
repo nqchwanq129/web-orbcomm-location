@@ -1,4 +1,5 @@
 import { loadDeviceAddress } from "./devices-location.js";
+import { addIslandLabels } from "../../island-labels.js";
 import {
   escapeHtml,
   formatBattery,
@@ -273,6 +274,7 @@ function renderDeviceDetailMap(device) {
   });
 
   deviceDetailMap.addControl(new maplibregl.NavigationControl(), "top-right");
+  addIslandLabels(deviceDetailMap);
 
   const markerElement = document.createElement("div");
 

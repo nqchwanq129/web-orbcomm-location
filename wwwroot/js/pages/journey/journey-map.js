@@ -1,3 +1,5 @@
+import { addIslandLabels } from "../../island-labels.js";
+
 let map;
 let marker;
 
@@ -6,6 +8,7 @@ export function renderJourneyMap(lines, points, onError) {
   if (!map) {
     map = new window.maplibregl.Map({ container: "journey-map", style: { version: 8, sources: { osm: { type: "raster", tiles: ["https://tile.openstreetmap.org/{z}/{x}/{y}.png"], tileSize: 256, attribution: "© OpenStreetMap contributors" } }, layers: [{ id: "osm", type: "raster", source: "osm" }] }, center: [108.2, 16.1], zoom: 5 });
     map.addControl(new window.maplibregl.NavigationControl(), "top-right");
+    addIslandLabels(map);
   }
   const currentMap = map;
   const update = () => {
